@@ -8,6 +8,8 @@ export default function Home() {
     'teamB': 'Team B'
   };
 
+  const [winner, setWinner] = useState('');
+
   const [score, setScore] = useState({
     teamA: 0,
     teamB: 0
@@ -16,12 +18,22 @@ export default function Home() {
   const [servingSide, setservingSide] = useState<ITeam>('teamA');
 
   const handleScore = (scoringTeam: ITeam) => {
-    setScore({ ...score, [scoringTeam]: score[scoringTeam] + 2 });
+    if (score[scoringTeam] === 29) {
+      setWinner(teamNames[scoringTeam]);
+      return;
+    }
+    setScore({ ...score, [scoringTeam]: score[scoringTeam] + 1 });
     setservingSide(scoringTeam);
   }
 
   return (
     <div>
+      {winner.length > 0
+        ? <div>
+          <p>Winner: {winner}</p>
+          <button>New Game</button>
+        </div>
+        : <></>}
       <div>Serving Team: {teamNames[servingSide]}</div>
       <div>
         <h3>Team A</h3>
