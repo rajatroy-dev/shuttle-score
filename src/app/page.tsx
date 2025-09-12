@@ -10,6 +10,8 @@ export default function Home() {
 
   const [winner, setWinner] = useState('');
 
+  const [noOfRounds, setNoOfRounds] = useState(1);
+
   const [score, setScore] = useState({
     teamA: 0,
     teamB: 0
@@ -18,21 +20,21 @@ export default function Home() {
   const [servingSide, setservingSide] = useState<ITeam>('teamA');
 
   const handleScore = (scoringTeam: ITeam) => {
-    setScore({ ...score, [scoringTeam]: score[scoringTeam] + 1 });
-    
-    if (score.teamA >= 20 && score.teamB >= 20) {
-      if (score[scoringTeam] >= 30) {
+    const localScore = { ...score, [scoringTeam]: score[scoringTeam] + 1 };
+    setScore(localScore);
+
+    // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
+    if (localScore.teamA >= 20 && localScore.teamB >= 20) {
+      if (localScore[scoringTeam] === 30) {
         setWinner(teamNames[scoringTeam]);
         return;
-      } else if (Math.abs(score.teamA - score.teamB) >= 2) {
-        setWinner(teamNames[scoringTeam]);
-        return;
-      }
-    } else {
-      if (score[scoringTeam] >= 21 && Math.abs(score.teamA - score.teamB) >= 2) {
+      } else if (Math.abs(localScore.teamA - localScore.teamB) === 2) {
         setWinner(teamNames[scoringTeam]);
         return;
       }
+    } else if (localScore[scoringTeam] === 21) {
+      setWinner(teamNames[scoringTeam]);
+      return;
     }
     setservingSide(scoringTeam);
   }
