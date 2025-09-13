@@ -11,17 +11,22 @@ export default function Home() {
   const [winner, setWinner] = useState('');
 
   const [noOfRounds, setNoOfRounds] = useState(1);
+  const [currentRound, setCurrentRound] = useState(0);
 
-  const [score, setScore] = useState({
-    teamA: 0,
-    teamB: 0
-  });
+  const [score, setScore] = useState<IScore[]>([
+    {
+      teamA: 0,
+      teamB: 0
+    }
+  ]);
 
   const [servingSide, setservingSide] = useState<ITeam>('teamA');
 
   const handleScore = (scoringTeam: ITeam) => {
-    const localScore = { ...score, [scoringTeam]: score[scoringTeam] + 1 };
-    setScore(localScore);
+    const localScore = { ...score[currentRound], [scoringTeam]: score[currentRound][scoringTeam] + 1 };
+    const scoreCopy = [...score];
+    scoreCopy[currentRound] = localScore;
+    setScore(scoreCopy);
 
     // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
     if (localScore.teamA >= 20 && localScore.teamB >= 20) {
@@ -52,7 +57,7 @@ export default function Home() {
         <h3>Team A</h3>
         <p>Player A1</p>
         <p>Player A2</p>
-        <p>Score: {score.teamA}</p>
+        <p>Score: {score[currentRound].teamA}</p>
         <div>
           <button onClick={() => handleScore('teamA')}>Score</button>
         </div>
@@ -61,7 +66,7 @@ export default function Home() {
         <h3>Team B</h3>
         <p>Player B1</p>
         <p>Player B2</p>
-        <p>Score: {score.teamB}</p>
+        <p>Score: {score[currentRound].teamB}</p>
         <div>
           <button onClick={() => handleScore('teamB')}>Score</button>
         </div>
@@ -74,3 +79,7 @@ export default function Home() {
 }
 
 type ITeam = 'teamA' | 'teamB';
+type IScore = {
+  teamA: number;
+  teamB: number;
+};
