@@ -13,12 +13,10 @@ export default function Home() {
   const [noOfRounds, setNoOfRounds] = useState(1);
   const [currentRound, setCurrentRound] = useState(0);
 
-  const [score, setScore] = useState<IScore[]>([
-    {
-      teamA: 0,
-      teamB: 0
-    }
-  ]);
+  const [score, setScore] = useState<IScore[]>([{
+    teamA: 0,
+    teamB: 0
+  }]);
 
   const [servingSide, setservingSide] = useState<ITeam>('teamA');
 
@@ -44,12 +42,22 @@ export default function Home() {
     setservingSide(scoringTeam);
   }
 
+  const startNewGame = () => {
+    setWinner('');
+    setCurrentRound(0);
+    setScore([{
+      teamA: 0,
+      teamB: 0
+    }]);
+    setservingSide('teamA');
+  }
+
   return (
     <div>
       {winner.length > 0
         ? <div>
           <p>Winner: {winner}</p>
-          <button>New Game</button>
+          <button onClick={startNewGame}>New Game</button>
         </div>
         : <></>}
       <div>Serving Team: {teamNames[servingSide]}</div>
@@ -59,7 +67,11 @@ export default function Home() {
         <p>Player A2</p>
         <p>Score: {score[currentRound].teamA}</p>
         <div>
-          <button onClick={() => handleScore('teamA')}>Score</button>
+          <button
+            disabled={winner.length > 0}
+            onClick={() => handleScore('teamA')}>
+            Score
+          </button>
         </div>
       </div>
       <div>
@@ -68,7 +80,11 @@ export default function Home() {
         <p>Player B2</p>
         <p>Score: {score[currentRound].teamB}</p>
         <div>
-          <button onClick={() => handleScore('teamB')}>Score</button>
+          <button
+            disabled={winner.length > 0}
+            onClick={() => handleScore('teamB')}>
+            Score
+          </button>
         </div>
       </div>
       <div>
