@@ -30,13 +30,16 @@ export default function Home() {
     if (localScore.teamA >= 20 && localScore.teamB >= 20) {
       if (localScore[scoringTeam] === 30) {
         setWinner(teamNames[scoringTeam]);
+        handleNewRound();
         return;
       } else if (Math.abs(localScore.teamA - localScore.teamB) === 2) {
         setWinner(teamNames[scoringTeam]);
+        handleNewRound();
         return;
       }
     } else if (localScore[scoringTeam] === 21) {
       setWinner(teamNames[scoringTeam]);
+      handleNewRound();
       return;
     }
     setservingSide(scoringTeam);
@@ -50,6 +53,25 @@ export default function Home() {
       teamB: 0
     }]);
     setservingSide('teamA');
+  }
+
+  const handleNewRound = () => {
+    const newRound = currentRound + 1;
+    
+    if (newRound >= noOfRounds) {
+      // TODO
+      return;
+    }
+
+    setCurrentRound(newRound);
+    setScore([
+      ...score,
+      {
+        teamA: 0,
+        teamB: 0
+      }
+    ]);
+    setservingSide(newRound % 2 === 0 ? 'teamB' : 'teamA');
   }
 
   return (
