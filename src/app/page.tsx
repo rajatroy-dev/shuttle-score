@@ -24,24 +24,21 @@ export default function Home() {
     const localScore = { ...score[currentRound], [scoringTeam]: score[currentRound][scoringTeam] + 1 };
     const scoreCopy = [...score];
     scoreCopy[currentRound] = localScore;
-    setScore(scoreCopy);
 
     // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
     if (localScore.teamA >= 20 && localScore.teamB >= 20) {
       if (localScore[scoringTeam] === 30) {
-        setWinner(teamNames[scoringTeam]);
+        localScore.winner = scoringTeam;
         handleNewRound();
-        return;
       } else if (Math.abs(localScore.teamA - localScore.teamB) === 2) {
-        setWinner(teamNames[scoringTeam]);
+        localScore.winner = scoringTeam;
         handleNewRound();
-        return;
       }
     } else if (localScore[scoringTeam] === 21) {
-      setWinner(teamNames[scoringTeam]);
+      localScore.winner = scoringTeam;
       handleNewRound();
-      return;
     }
+    setScore(scoreCopy);
     setservingSide(scoringTeam);
   }
 
@@ -57,9 +54,9 @@ export default function Home() {
 
   const handleNewRound = () => {
     const newRound = currentRound + 1;
-    
+
     if (newRound >= noOfRounds) {
-      // TODO
+      findWinner();
       return;
     }
 
@@ -72,6 +69,16 @@ export default function Home() {
       }
     ]);
     setservingSide(newRound % 2 === 0 ? 'teamB' : 'teamA');
+  }
+
+  const findWinner = () => {
+    let teamA = 0;
+    let teamB = 0;
+
+    score.forEach(it => it.winner === 'teamA' ? ++teamA : ++teamB);
+
+    if (teamA - teamB === 2) setWinner('teamA');
+    else if (teamB - teamA === 2) setWinner('teamB');
   }
 
   return (
@@ -120,4 +127,5 @@ type ITeam = 'teamA' | 'teamB';
 type IScore = {
   teamA: number;
   teamB: number;
+  winner?: 'teamA' | 'teamB';
 };
