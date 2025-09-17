@@ -10,7 +10,7 @@ export default function Home() {
 
   const [winner, setWinner] = useState('');
 
-  const [noOfRounds, setNoOfRounds] = useState(1);
+  const [noOfRounds, setNoOfRounds] = useState(3);
   const [currentRound, setCurrentRound] = useState(0);
 
   const [score, setScore] = useState<IScore[]>([{
@@ -23,21 +23,33 @@ export default function Home() {
   const handleScore = (scoringTeam: ITeam) => {
     const localScore = { ...score[currentRound], [scoringTeam]: score[currentRound][scoringTeam] + 1 };
     const scoreCopy = [...score];
-    scoreCopy[currentRound] = localScore;
 
     // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
     if (localScore.teamA >= 20 && localScore.teamB >= 20) {
       if (localScore[scoringTeam] === 30) {
         localScore.winner = scoringTeam;
+        scoreCopy.push({
+          teamA: 0,
+          teamB: 0
+        });
         handleNewRound();
       } else if (Math.abs(localScore.teamA - localScore.teamB) === 2) {
         localScore.winner = scoringTeam;
+        scoreCopy.push({
+          teamA: 0,
+          teamB: 0
+        });
         handleNewRound();
       }
     } else if (localScore[scoringTeam] === 21) {
       localScore.winner = scoringTeam;
+      scoreCopy.push({
+        teamA: 0,
+        teamB: 0
+      });
       handleNewRound();
     }
+    scoreCopy[currentRound] = localScore;
     setScore(scoreCopy);
     setservingSide(scoringTeam);
   }
@@ -61,13 +73,6 @@ export default function Home() {
     }
 
     setCurrentRound(newRound);
-    setScore([
-      ...score,
-      {
-        teamA: 0,
-        teamB: 0
-      }
-    ]);
     setservingSide(newRound % 2 === 0 ? 'teamB' : 'teamA');
   }
 
