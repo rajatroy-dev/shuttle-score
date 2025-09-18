@@ -20,20 +20,22 @@ export default function Home() {
 
   const [servingSide, setservingSide] = useState<ITeam>('teamA');
 
+  const [playHistory, setPlayHistory] = useState<IHistory[]>([]);
+
   const handleScore = (scoringTeam: ITeam) => {
     const localScore = { ...score[currentRound], [scoringTeam]: score[currentRound][scoringTeam] + 1 };
     const scoreCopy = [...score];
 
     // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
     if (localScore.teamA >= 20 && localScore.teamB >= 20) {
-      if (localScore[scoringTeam] === 30) {
+      if (localScore[scoringTeam] >= 30) {
         localScore.winner = scoringTeam;
         scoreCopy.push({
           teamA: 0,
           teamB: 0
         });
         handleNewRound();
-      } else if (Math.abs(localScore.teamA - localScore.teamB) === 2) {
+      } else if (Math.abs(localScore.teamA - localScore.teamB) >= 2) {
         localScore.winner = scoringTeam;
         scoreCopy.push({
           teamA: 0,
@@ -52,6 +54,7 @@ export default function Home() {
     scoreCopy[currentRound] = localScore;
     setScore(scoreCopy);
     setservingSide(scoringTeam);
+    console.log(winner);
   }
 
   const startNewGame = () => {
@@ -133,4 +136,9 @@ type IScore = {
   teamA: number;
   teamB: number;
   winner?: 'teamA' | 'teamB';
+};
+type IHistory = {
+  scoringTeam: 'teamA' | 'teamB';
+  currentRound: number;
+  score: IScore;
 };
