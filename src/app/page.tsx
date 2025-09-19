@@ -70,10 +70,7 @@ export default function Home() {
   const handleNewRound = () => {
     const newRound = currentRound + 1;
 
-    if (newRound >= noOfRounds) {
-      findWinner();
-      return;
-    }
+    findWinner();
 
     setCurrentRound(newRound);
     setservingSide(newRound % 2 === 0 ? 'teamB' : 'teamA');
@@ -85,8 +82,10 @@ export default function Home() {
 
     score.forEach(it => it.winner === 'teamA' ? ++teamA : ++teamB);
 
-    if (teamA - teamB === 2) setWinner('teamA');
-    else if (teamB - teamA === 2) setWinner('teamB');
+    if (teamB === 0 && (teamA - teamB === 2)) setWinner('teamA');
+    else if (teamA === 0 && (teamB - teamA === 2)) setWinner('teamB');
+    else if (teamB !== 0 && (teamA - teamB === 1)) setWinner('teamA');
+    else if (teamA !== 0 && (teamB - teamA === 1)) setWinner('teamB');
   }
 
   return (
