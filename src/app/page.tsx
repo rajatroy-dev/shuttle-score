@@ -45,7 +45,7 @@ export default function Home() {
       }
     } else if (localScore[scoringTeam] === 21) {
       localScore.winner = scoringTeam;
-      scoreCopy.push({
+      scoreCopy.length <= 3 && scoreCopy.push({
         teamA: 0,
         teamB: 0
       });
@@ -80,12 +80,15 @@ export default function Home() {
     let teamA = 0;
     let teamB = 0;
 
-    score.forEach(it => it.winner === 'teamA' ? ++teamA : ++teamB);
+    score.forEach(it => {
+      if (it.winner === 'teamA') ++teamA;
+      else if (it.winner === 'teamB') ++teamB;
+    });
 
-    if (teamB === 0 && (teamA - teamB === 2)) setWinner('teamA');
-    else if (teamA === 0 && (teamB - teamA === 2)) setWinner('teamB');
-    else if (teamB !== 0 && (teamA - teamB === 1)) setWinner('teamA');
-    else if (teamA !== 0 && (teamB - teamA === 1)) setWinner('teamB');
+    if (teamB === 0 && (teamA - teamB === 2)) setWinner(teamNames.teamA);
+    else if (teamA === 0 && (teamB - teamA === 2)) setWinner(teamNames.teamB);
+    else if (teamB !== 0 && (teamA - teamB === 1)) setWinner(teamNames.teamA);
+    else if (teamA !== 0 && (teamB - teamA === 1)) setWinner(teamNames.teamB);
   }
 
   return (
@@ -101,7 +104,6 @@ export default function Home() {
         <h3>Team A</h3>
         <p>Player A1</p>
         <p>Player A2</p>
-        <p>Score: {score[currentRound].teamA}</p>
         <div>
           <button
             disabled={winner.length > 0}
@@ -114,7 +116,6 @@ export default function Home() {
         <h3>Team B</h3>
         <p>Player B1</p>
         <p>Player B2</p>
-        <p>Score: {score[currentRound].teamB}</p>
         <div>
           <button
             disabled={winner.length > 0}
@@ -123,6 +124,13 @@ export default function Home() {
           </button>
         </div>
       </div>
+      {score.map((it, index) =>
+        <div key={index}>
+          <p>Round: {index + 1}</p>
+          <p>Team A score: {it.teamA}</p>
+          <p>Team B score: {it.teamB}</p>
+        </div>
+      )}
       <div>
         <button>Undo</button>
       </div>
