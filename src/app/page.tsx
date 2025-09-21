@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react";
+import { IScore, ITeam } from "./_store/useAppStore";
 
 export default function Home() {
   const teamNames = {
@@ -138,12 +139,6 @@ export default function Home() {
   );
 }
 
-type ITeam = 'teamA' | 'teamB';
-type IScore = {
-  teamA: number;
-  teamB: number;
-  winner?: 'teamA' | 'teamB';
-};
 type IHistory = {
   scoringTeam: 'teamA' | 'teamB';
   currentRound: number;
