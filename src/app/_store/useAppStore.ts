@@ -5,7 +5,7 @@ const teamNames = {
     'teamB': 'Team B'
 };
 
-const useAppStore = create((set) => ({
+const useAppStore = create<IAppState>()((set) => ({
     winner: '',
     noOfRounds: 3,
     score: [{
@@ -14,9 +14,9 @@ const useAppStore = create((set) => ({
     }],
     currentRound: 0,
     servingSide: 'teamA',
-    setWinner: (value: ITeam) => set({ winner: teamNames[value] }),
+    setWinner: (value: string) => set({ winner: value }),
     setNoOfRounds: (value: number) => set({ noOfRounds: value }),
-    setScore: (value: IScore) => set({ score: value }),
+    setScore: (value: IScore[]) => set({ score: value }),
     setCurrentRound: () => set((state: IAppState) => ({ currentRound: state.currentRound + 1 })),
     setServingSide: (value: ITeam) => set({ servingSide: value })
     // removeAllBears: () => set({ bears: 0 }),
@@ -33,9 +33,10 @@ export type IScore = {
 };
 
 export type IAppState = {
-    winner: ITeam;
+    winner: string;
     noOfRounds: number;
-    score: IScore;
+    score: IScore[];
     currentRound: number;
     servingSide: ITeam;
+    setWinner: (value: string) => void;
 };

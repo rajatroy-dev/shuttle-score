@@ -1,17 +1,17 @@
 'use client'
 
 import { useState } from "react";
-import { IScore, ITeam } from "./_store/useAppStore";
+import useAppStore, { IAppState, IScore, ITeam } from "@/app/_store/useAppStore";
 
 export default function Home() {
+  const winner = useAppStore((state: IAppState) => state.winner);
+  const setWinner = useAppStore((state: IAppState) => state.setWinner);
+
   const teamNames = {
     'teamA': 'Team A',
     'teamB': 'Team B'
   };
 
-  const [winner, setWinner] = useState('');
-
-  const [noOfRounds, setNoOfRounds] = useState(3);
   const [currentRound, setCurrentRound] = useState(0);
 
   const [score, setScore] = useState<IScore[]>([{
