@@ -6,20 +6,18 @@ import useAppStore, { IAppState, IScore, ITeam } from "@/app/_store/useAppStore"
 export default function Home() {
   const winner = useAppStore((state: IAppState) => state.winner);
   const setWinner = useAppStore((state: IAppState) => state.setWinner);
+  const currentRound = useAppStore((state: IAppState) => state.currentRound);
+  const resetCurrentRound = useAppStore((state: IAppState) => state.resetCurrentRound);
+  const setCurrentRound = useAppStore((state: IAppState) => state.setCurrentRound);
+  const servingSide = useAppStore((state: IAppState) => state.servingSide);
+  const setServingSide = useAppStore((state: IAppState) => state.setServingSide);
+  const score = useAppStore((state: IAppState) => state.score);
+  const setScore = useAppStore((state: IAppState) => state.setScore);
 
   const teamNames = {
     'teamA': 'Team A',
     'teamB': 'Team B'
   };
-
-  const [currentRound, setCurrentRound] = useState(0);
-
-  const [score, setScore] = useState<IScore[]>([{
-    teamA: 0,
-    teamB: 0
-  }]);
-
-  const [servingSide, setservingSide] = useState<ITeam>('teamA');
 
   const [playHistory, setPlayHistory] = useState<IHistory[]>([]);
 
@@ -54,18 +52,18 @@ export default function Home() {
     }
     scoreCopy[currentRound] = localScore;
     setScore(scoreCopy);
-    setservingSide(scoringTeam);
+    setServingSide(scoringTeam);
     console.log(winner);
   }
 
   const startNewGame = () => {
     setWinner('');
-    setCurrentRound(0);
+    resetCurrentRound();
     setScore([{
       teamA: 0,
       teamB: 0
     }]);
-    setservingSide('teamA');
+    setServingSide('teamA');
   }
 
   const handleNewRound = () => {
@@ -73,8 +71,8 @@ export default function Home() {
 
     findWinner();
 
-    setCurrentRound(newRound);
-    setservingSide(newRound % 2 === 0 ? 'teamB' : 'teamA');
+    setCurrentRound();
+    setServingSide(newRound % 2 === 0 ? 'teamB' : 'teamA');
   }
 
   const findWinner = () => {
