@@ -21,42 +21,42 @@ export default function Home() {
 
   const [playHistory, setPlayHistory] = useState<IHistory[]>([]);
 
+  const declareWinner = (
+    latestScore: IScore, 
+    allScores: IScore[], 
+    scoringTeam: ITeam
+  ) => {
+    latestScore.winner = scoringTeam;
+    allScores.length < 3 && allScores.push({
+      teamA: 0,
+      teamB: 0
+    });
+    allScores[currentRound] = latestScore;
+  }
+
   const handleScore = (scoringTeam: ITeam) => {
-    const localScore = { ...score[currentRound], [scoringTeam]: score[currentRound][scoringTeam] + 1 };
+    const localScore = {
+      ...score[currentRound],
+      [scoringTeam]: score[currentRound][scoringTeam] + 1
+    };
     const scoreCopy = [...score];
 
     // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
     if (localScore.teamA >= 20 && localScore.teamB >= 20) {
       if (localScore[scoringTeam] >= 30) {
-        localScore.winner = scoringTeam;
-        scoreCopy.length < 3 && scoreCopy.push({
-          teamA: 0,
-          teamB: 0
-        });
-        scoreCopy[currentRound] = localScore;
+        declareWinner(localScore, scoreCopy, scoringTeam);
         handleNewRound(scoreCopy);
       } else if (Math.abs(localScore.teamA - localScore.teamB) >= 2) {
-        localScore.winner = scoringTeam;
-        scoreCopy.length < 3 && scoreCopy.push({
-          teamA: 0,
-          teamB: 0
-        });
-        scoreCopy[currentRound] = localScore;
+        declareWinner(localScore, scoreCopy, scoringTeam);
         handleNewRound(scoreCopy);
       }
     } else if (localScore[scoringTeam] === 21) {
-      localScore.winner = scoringTeam;
-      scoreCopy.length < 3 && scoreCopy.push({
-        teamA: 0,
-        teamB: 0
-      });
-      scoreCopy[currentRound] = localScore;
+      declareWinner(localScore, scoreCopy, scoringTeam);
       handleNewRound(scoreCopy);
     }
     scoreCopy[currentRound] = localScore;
     setScore(scoreCopy);
     setServingSide(scoringTeam);
-    console.log(winner);
   }
 
   const startNewGame = () => {

@@ -15,6 +15,12 @@ const useAppStore = create<IAppState>()((set) => ({
     setCurrentRound: () => set((state: IAppState) => ({ currentRound: state.currentRound + 1 })),
     setServingSide: (value: ITeam) => set({ servingSide: value }),
     resetCurrentRound: () => set({ currentRound: 0 }),
+    resetScore: () => set({
+        score: [{
+            teamA: 0,
+            teamB: 0
+        }]
+    })
 }));
 
 export default useAppStore;
@@ -38,4 +44,5 @@ export type IAppState = {
     resetCurrentRound: () => void;
     setServingSide: (value: ITeam) => void;
     setScore: (value: IScore[]) => void;
+    resetScore: () => void;
 };
