@@ -1,10 +1,5 @@
 import { create } from 'zustand';
 
-const teamNames = {
-    'teamA': 'Team A',
-    'teamB': 'Team B'
-};
-
 const useAppStore = create<IAppState>()((set) => ({
     winner: '',
     noOfRounds: 3,

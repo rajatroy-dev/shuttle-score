@@ -29,26 +29,29 @@ export default function Home() {
     if (localScore.teamA >= 20 && localScore.teamB >= 20) {
       if (localScore[scoringTeam] >= 30) {
         localScore.winner = scoringTeam;
-        scoreCopy.push({
+        scoreCopy.length < 3 && scoreCopy.push({
           teamA: 0,
           teamB: 0
         });
-        handleNewRound();
+        scoreCopy[currentRound] = localScore;
+        handleNewRound(scoreCopy);
       } else if (Math.abs(localScore.teamA - localScore.teamB) >= 2) {
         localScore.winner = scoringTeam;
-        scoreCopy.push({
+        scoreCopy.length < 3 && scoreCopy.push({
           teamA: 0,
           teamB: 0
         });
-        handleNewRound();
+        scoreCopy[currentRound] = localScore;
+        handleNewRound(scoreCopy);
       }
     } else if (localScore[scoringTeam] === 21) {
       localScore.winner = scoringTeam;
-      scoreCopy.length <= 3 && scoreCopy.push({
+      scoreCopy.length < 3 && scoreCopy.push({
         teamA: 0,
         teamB: 0
       });
-      handleNewRound();
+      scoreCopy[currentRound] = localScore;
+      handleNewRound(scoreCopy);
     }
     scoreCopy[currentRound] = localScore;
     setScore(scoreCopy);
@@ -66,20 +69,20 @@ export default function Home() {
     setServingSide('teamA');
   }
 
-  const handleNewRound = () => {
+  const handleNewRound = (latestScore: IScore[]) => {
     const newRound = currentRound + 1;
 
-    findWinner();
+    findWinner(latestScore);
 
     setCurrentRound();
     setServingSide(newRound % 2 === 0 ? 'teamB' : 'teamA');
   }
 
-  const findWinner = () => {
+  const findWinner = (latestScore: IScore[]) => {
     let teamA = 0;
     let teamB = 0;
 
-    score.forEach(it => {
+    latestScore.forEach(it => {
       if (it.winner === 'teamA') ++teamA;
       else if (it.winner === 'teamB') ++teamB;
     });
