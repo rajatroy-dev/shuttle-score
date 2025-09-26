@@ -6,13 +6,17 @@ import useAppStore, { IAppState, IScore, ITeam } from "@/app/_store/useAppStore"
 export default function Home() {
   const winner = useAppStore((state: IAppState) => state.winner);
   const setWinner = useAppStore((state: IAppState) => state.setWinner);
+  
   const currentRound = useAppStore((state: IAppState) => state.currentRound);
+  const incrementRound = useAppStore((state: IAppState) => state.incrementRound);
   const resetCurrentRound = useAppStore((state: IAppState) => state.resetCurrentRound);
-  const setCurrentRound = useAppStore((state: IAppState) => state.setCurrentRound);
+  
   const servingSide = useAppStore((state: IAppState) => state.servingSide);
   const setServingSide = useAppStore((state: IAppState) => state.setServingSide);
+  
   const score = useAppStore((state: IAppState) => state.score);
   const setScore = useAppStore((state: IAppState) => state.setScore);
+  const resetScore = useAppStore((state: IAppState) => state.resetScore);
 
   const teamNames = {
     'teamA': 'Team A',
@@ -21,17 +25,18 @@ export default function Home() {
 
   const [playHistory, setPlayHistory] = useState<IHistory[]>([]);
 
-  const declareWinner = (
-    latestScore: IScore, 
-    allScores: IScore[], 
+  const declareRoundWinner = (
+    latestScore: IScore,
+    roundScores: IScore[],
     scoringTeam: ITeam
   ) => {
     latestScore.winner = scoringTeam;
-    allScores.length < 3 && allScores.push({
+    roundScores.length < 3 && roundScores.push({
       teamA: 0,
       teamB: 0
     });
-    allScores[currentRound] = latestScore;
+    roundScores[currentRound] = latestScore;
+    handleNewRound(roundScores);
   }
 
   const handleScore = (scoringTeam: ITeam) => {
@@ -44,15 +49,12 @@ export default function Home() {
     // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
     if (localScore.teamA >= 20 && localScore.teamB >= 20) {
       if (localScore[scoringTeam] >= 30) {
-        declareWinner(localScore, scoreCopy, scoringTeam);
-        handleNewRound(scoreCopy);
+        declareRoundWinner(localScore, scoreCopy, scoringTeam);
       } else if (Math.abs(localScore.teamA - localScore.teamB) >= 2) {
-        declareWinner(localScore, scoreCopy, scoringTeam);
-        handleNewRound(scoreCopy);
+        declareRoundWinner(localScore, scoreCopy, scoringTeam);
       }
     } else if (localScore[scoringTeam] === 21) {
-      declareWinner(localScore, scoreCopy, scoringTeam);
-      handleNewRound(scoreCopy);
+      declareRoundWinner(localScore, scoreCopy, scoringTeam);
     }
     scoreCopy[currentRound] = localScore;
     setScore(scoreCopy);
@@ -62,27 +64,22 @@ export default function Home() {
   const startNewGame = () => {
     setWinner('');
     resetCurrentRound();
-    setScore([{
-      teamA: 0,
-      teamB: 0
-    }]);
+    resetScore();
     setServingSide('teamA');
   }
 
-  const handleNewRound = (latestScore: IScore[]) => {
+  const handleNewRound = (latestRoundScores: IScore[]) => {
     const newRound = currentRound + 1;
-
-    findWinner(latestScore);
-
-    setCurrentRound();
+    determineMatchWinner(latestRoundScores);
+    incrementRound();
     setServingSide(newRound % 2 === 0 ? 'teamB' : 'teamA');
   }
 
-  const findWinner = (latestScore: IScore[]) => {
+  const determineMatchWinner = (latestRoundScores: IScore[]) => {
     let teamA = 0;
     let teamB = 0;
 
-    latestScore.forEach(it => {
+    latestRoundScores.forEach(it => {
       if (it.winner === 'teamA') ++teamA;
       else if (it.winner === 'teamB') ++teamB;
     });
