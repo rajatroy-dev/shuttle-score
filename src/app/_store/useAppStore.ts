@@ -13,6 +13,7 @@ const useAppStore = create<IAppState>()((set) => ({
     setNoOfRounds: (value: number) => set({ noOfRounds: value }),
     setScore: (value: IScore[]) => set({ score: value }),
     incrementRound: () => set((state: IAppState) => ({ currentRound: state.currentRound + 1 })),
+    setCurrentRound: (value: number) => set({ currentRound: value }),
     setServingSide: (value: ITeam) => set({ servingSide: value }),
     resetCurrentRound: () => set({ currentRound: 0 }),
     resetScore: () => set({
@@ -42,6 +43,7 @@ export type IAppState = {
     setWinner: (value: string) => void;
     incrementRound: () => void;
     resetCurrentRound: () => void;
+    setCurrentRound: (value: number) => void;
     setServingSide: (value: ITeam) => void;
     setScore: (value: IScore[]) => void;
     resetScore: () => void;
