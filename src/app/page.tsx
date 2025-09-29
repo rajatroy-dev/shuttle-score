@@ -24,6 +24,19 @@ export default function Home() {
     'teamB': 'Team B'
   };
 
+  const playerPosition = {
+    'teamA': {
+      0: 'playerA',
+      1: 'playerB'
+    },
+    'teamB': {
+      2: 'playerA',
+      3: 'playerB'
+    }
+  };
+
+  const [currentServePositon, setCurrentPosition] = useState(0);
+
   const [playHistory, setPlayHistory] = useState<IHistory[]>([]);
 
   const declareRoundWinner = (
@@ -67,7 +80,6 @@ export default function Home() {
       score: scoreCopy
     });
     setPlayHistory(playHistoryCopy);
-    console.log(playHistoryCopy);
   }
 
   const startNewGame = () => {
