@@ -24,7 +24,7 @@ export default function Home() {
     'teamB': 'Team B'
   };
 
-  const playerPosition = {
+  const [playerPosition, setPlayerPosition] = useState({
     'teamA': {
       0: 'playerA',
       1: 'playerB'
@@ -33,7 +33,7 @@ export default function Home() {
       2: 'playerA',
       3: 'playerB'
     }
-  };
+  });
 
   const [currentServePositon, setCurrentPosition] = useState(0);
 
@@ -122,6 +122,34 @@ export default function Home() {
     setPlayHistory(playHistoryCopy);
   }
 
+  const handleCurrentPlayer = (scoringTeam: ITeam) => {
+    if (scoringTeam === 'teamA' && currentServePositon <= 1) {
+      const playerPositionCopy = { ...playerPosition };
+      if (currentServePositon === 0) {
+        playerPositionCopy.teamA[0] = 'playerB';
+        playerPositionCopy.teamA[1] = 'playerA';
+        setCurrentPosition(1);
+      } else {
+        playerPositionCopy.teamA[0] = 'playerA';
+        playerPositionCopy.teamA[1] = 'playerB';
+        setCurrentPosition(0);
+      }
+      setPlayerPosition(playerPositionCopy);
+    } else if (scoringTeam === 'teamB') {
+      const playerPositionCopy = { ...playerPosition };
+      if (currentServePositon === 0) {
+        playerPositionCopy.teamB[2] = 'playerB';
+        playerPositionCopy.teamB[3] = 'playerA';
+        setCurrentPosition(3);
+      } else {
+        playerPositionCopy.teamB[2] = 'playerA';
+        playerPositionCopy.teamB[3] = 'playerB';
+        setCurrentPosition(2);
+      }
+      setPlayerPosition(playerPositionCopy);
+    }
+  };
+
   return (
     <div>
       {winner.length > 0
@@ -133,6 +161,7 @@ export default function Home() {
       {winner.length <= 0
         ? <div>
           <p>Serving Team: {teamNames[servingSide]}</p>
+          <p>Current Position: {currentServePositon}</p>
         </div>
         : <></>}
       <div>
