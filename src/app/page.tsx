@@ -79,6 +79,7 @@ export default function Home() {
       roundNumber: currentRound,
       score: scoreCopy
     });
+    handleCurrentPlayer(scoringTeam, localScore);
     setPlayHistory(playHistoryCopy);
   }
 
@@ -122,31 +123,50 @@ export default function Home() {
     setPlayHistory(playHistoryCopy);
   }
 
-  const handleCurrentPlayer = (scoringTeam: ITeam) => {
-    if (scoringTeam === 'teamA' && currentServePositon <= 1) {
+  const handleCurrentPlayer = (
+    scoringTeam: ITeam,
+    currentScore: IScore
+  ) => {
+    if (scoringTeam === 'teamA') {
       const playerPositionCopy = { ...playerPosition };
-      if (currentServePositon === 0) {
-        playerPositionCopy.teamA[0] = 'playerB';
-        playerPositionCopy.teamA[1] = 'playerA';
-        setCurrentPosition(1);
+      if (currentServePositon <= 1) {
+        if (currentServePositon === 0) {
+          playerPositionCopy.teamA[0] = 'playerB';
+          playerPositionCopy.teamA[1] = 'playerA';
+          setCurrentPosition(1);
+        } else {
+          playerPositionCopy.teamA[0] = 'playerA';
+          playerPositionCopy.teamA[1] = 'playerB';
+          setCurrentPosition(0);
+        }
+        setPlayerPosition(playerPositionCopy);
       } else {
-        playerPositionCopy.teamA[0] = 'playerA';
-        playerPositionCopy.teamA[1] = 'playerB';
-        setCurrentPosition(0);
+        if (currentScore.teamA % 2 === 0) {
+          setCurrentPosition(0);
+        } else {
+          setCurrentPosition(1);
+        }
       }
-      setPlayerPosition(playerPositionCopy);
     } else if (scoringTeam === 'teamB') {
       const playerPositionCopy = { ...playerPosition };
-      if (currentServePositon === 0) {
-        playerPositionCopy.teamB[2] = 'playerB';
-        playerPositionCopy.teamB[3] = 'playerA';
-        setCurrentPosition(3);
+      if (currentServePositon >= 2) {
+        if (currentServePositon === 2) {
+          playerPositionCopy.teamB[2] = 'playerB';
+          playerPositionCopy.teamB[3] = 'playerA';
+          setCurrentPosition(3);
+        } else {
+          playerPositionCopy.teamB[2] = 'playerA';
+          playerPositionCopy.teamB[3] = 'playerB';
+          setCurrentPosition(2);
+        }
+        setPlayerPosition(playerPositionCopy);
       } else {
-        playerPositionCopy.teamB[2] = 'playerA';
-        playerPositionCopy.teamB[3] = 'playerB';
-        setCurrentPosition(2);
+        if (currentScore.teamA % 2 === 0) {
+          setCurrentPosition(2);
+        } else {
+          setCurrentPosition(3);
+        }
       }
-      setPlayerPosition(playerPositionCopy);
     }
   };
 
