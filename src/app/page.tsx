@@ -24,7 +24,7 @@ export default function Home() {
     'teamB': 'Team B'
   };
 
-  const [playerPosition, setPlayerPosition] = useState({
+  const [playerPosition, setPlayerPosition] = useState<IPlayerPosition>({
     'teamA': {
       0: 'playerA',
       1: 'playerB'
@@ -91,7 +91,6 @@ export default function Home() {
   }
 
   const handleNewRound = (latestRoundScores: IScore[]) => {
-    const newRound = currentRound + 1;
     determineMatchWinner(latestRoundScores);
     incrementRound();
     setServingSide(latestRoundScores[currentRound].winner!);
@@ -106,10 +105,14 @@ export default function Home() {
       else if (it.winner === 'teamB') ++teamB;
     });
 
-    if (teamB === 0 && (teamA - teamB === 2)) setWinner(teamNames.teamA);
-    else if (teamA === 0 && (teamB - teamA === 2)) setWinner(teamNames.teamB);
-    else if (teamB !== 0 && (teamA - teamB === 1)) setWinner(teamNames.teamA);
-    else if (teamA !== 0 && (teamB - teamA === 1)) setWinner(teamNames.teamB);
+    if ((teamA - teamB === 2 && teamB === 0)
+      || (teamA - teamB === 1 && teamB !== 0)) {
+      setWinner(teamNames.teamA);
+    } else if ((teamB - teamA === 2 && teamA === 0)
+      || (teamB - teamA === 1 && teamA !== 0)) {
+      setWinner(teamNames.teamB);
+    }
+
   }
 
   const handleUndo = () => {
@@ -123,50 +126,33 @@ export default function Home() {
     setPlayHistory(playHistoryCopy);
   }
 
-  const handleCurrentPlayer = (
-    scoringTeam: ITeam,
-    currentScore: IScore
-  ) => {
-    if (scoringTeam === 'teamA') {
-      const playerPositionCopy = { ...playerPosition };
-      if (currentServePositon <= 1) {
-        if (currentServePositon === 0) {
-          playerPositionCopy.teamA[0] = 'playerB';
-          playerPositionCopy.teamA[1] = 'playerA';
-          setCurrentPosition(1);
-        } else {
-          playerPositionCopy.teamA[0] = 'playerA';
-          playerPositionCopy.teamA[1] = 'playerB';
-          setCurrentPosition(0);
-        }
-        setPlayerPosition(playerPositionCopy);
+  const handleCurrentPlayer = (scoringTeam: ITeam, currentScore: IScore) => {
+    const playerPositionCopy = { ...playerPosition };
+
+    // team config: serve indices & score reference
+    const teamConfig = {
+      teamA: { positions: [0, 1], score: currentScore.teamA },
+      teamB: { positions: [2, 3], score: currentScore.teamB },
+    };
+
+    const { positions, score } = teamConfig[scoringTeam];
+    const [even, odd] = positions;
+
+    if (positions.includes(currentServePositon)) {
+      // Toggle positions if serving inside this team’s zone
+      if (currentServePositon === even) {
+        playerPositionCopy[scoringTeam][even] = "playerB";
+        playerPositionCopy[scoringTeam][odd] = "playerA";
+        setCurrentPosition(odd);
       } else {
-        if (currentScore.teamA % 2 === 0) {
-          setCurrentPosition(0);
-        } else {
-          setCurrentPosition(1);
-        }
+        playerPositionCopy[scoringTeam][even] = "playerA";
+        playerPositionCopy[scoringTeam][odd] = "playerB";
+        setCurrentPosition(even);
       }
-    } else if (scoringTeam === 'teamB') {
-      const playerPositionCopy = { ...playerPosition };
-      if (currentServePositon >= 2) {
-        if (currentServePositon === 2) {
-          playerPositionCopy.teamB[2] = 'playerB';
-          playerPositionCopy.teamB[3] = 'playerA';
-          setCurrentPosition(3);
-        } else {
-          playerPositionCopy.teamB[2] = 'playerA';
-          playerPositionCopy.teamB[3] = 'playerB';
-          setCurrentPosition(2);
-        }
-        setPlayerPosition(playerPositionCopy);
-      } else {
-        if (currentScore.teamA % 2 === 0) {
-          setCurrentPosition(2);
-        } else {
-          setCurrentPosition(3);
-        }
-      }
+      setPlayerPosition(playerPositionCopy);
+    } else {
+      // Decide serve side based on even/odd score
+      setCurrentPosition(score % 2 === 0 ? even : odd);
     }
   };
 
@@ -181,7 +167,7 @@ export default function Home() {
       {winner.length <= 0
         ? <div>
           <p>Serving Team: {teamNames[servingSide]}</p>
-          <p>Current Position: {currentServePositon}</p>
+          <p>Current Serve Position: {currentServePositon}</p>
         </div>
         : <></>}
       <div>
@@ -226,4 +212,8 @@ type IHistory = {
   scoringTeam: 'teamA' | 'teamB';
   roundNumber: number;
   score: IScore[];
+};
+
+type IPlayerPosition = {
+  [team in ITeam]: { [key: number]: string; };
 };
