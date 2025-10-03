@@ -35,9 +35,43 @@ export default function Home() {
     }
   });
 
-  const [currentServePositon, setCurrentPosition] = useState(0);
+  const [currentServePositon, setCurrentServePosition] = useState(0);
 
   const [playHistory, setPlayHistory] = useState<IHistory[]>([]);
+
+  const handleScore = (scoringTeam: ITeam) => {
+    const localScore = {
+      ...score[currentRound],
+      [scoringTeam]: score[currentRound][scoringTeam] + 1
+    };
+    const scoreCopy = [...score];
+    const playHistoryCopy = [...playHistory];
+    let isRoundOver = false;
+
+    // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
+    if (localScore.teamA >= 20 && localScore.teamB >= 20) {
+      if (localScore[scoringTeam] >= 30) {
+        isRoundOver = true;
+        declareRoundWinner(localScore, scoreCopy, scoringTeam);
+      } else if (Math.abs(localScore.teamA - localScore.teamB) >= 2) {
+        isRoundOver = true;
+        declareRoundWinner(localScore, scoreCopy, scoringTeam);
+      }
+    } else if (localScore[scoringTeam] === 21) {
+      isRoundOver = true;
+      declareRoundWinner(localScore, scoreCopy, scoringTeam);
+    }
+    scoreCopy[currentRound] = localScore;
+    setScore(scoreCopy);
+    setServingSide(scoringTeam);
+    playHistoryCopy.push({
+      scoringTeam: scoringTeam,
+      roundNumber: currentRound,
+      score: scoreCopy
+    });
+    handleCurrentPlayer(scoringTeam, localScore, isRoundOver);
+    setPlayHistory(playHistoryCopy);
+  }
 
   const declareRoundWinner = (
     latestScore: IScore,
@@ -51,43 +85,6 @@ export default function Home() {
     });
     roundScores[currentRound] = latestScore;
     handleNewRound(roundScores);
-  }
-
-  const handleScore = (scoringTeam: ITeam) => {
-    const localScore = {
-      ...score[currentRound],
-      [scoringTeam]: score[currentRound][scoringTeam] + 1
-    };
-    const scoreCopy = [...score];
-    const playHistoryCopy = [...playHistory];
-
-    // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
-    if (localScore.teamA >= 20 && localScore.teamB >= 20) {
-      if (localScore[scoringTeam] >= 30) {
-        declareRoundWinner(localScore, scoreCopy, scoringTeam);
-      } else if (Math.abs(localScore.teamA - localScore.teamB) >= 2) {
-        declareRoundWinner(localScore, scoreCopy, scoringTeam);
-      }
-    } else if (localScore[scoringTeam] === 21) {
-      declareRoundWinner(localScore, scoreCopy, scoringTeam);
-    }
-    scoreCopy[currentRound] = localScore;
-    setScore(scoreCopy);
-    setServingSide(scoringTeam);
-    playHistoryCopy.push({
-      scoringTeam: scoringTeam,
-      roundNumber: currentRound,
-      score: scoreCopy
-    });
-    handleCurrentPlayer(scoringTeam, localScore);
-    setPlayHistory(playHistoryCopy);
-  }
-
-  const startNewGame = () => {
-    setWinner('');
-    resetCurrentRound();
-    resetScore();
-    setServingSide('teamA');
   }
 
   const handleNewRound = (latestRoundScores: IScore[]) => {
@@ -112,7 +109,38 @@ export default function Home() {
       || (teamB - teamA === 1 && teamA !== 0)) {
       setWinner(teamNames.teamB);
     }
+  }
 
+  const handleCurrentPlayer = (scoringTeam: ITeam, currentScore: IScore, isRoundOver: boolean) => {
+    const playerPositionCopy = { ...playerPosition };
+
+    // team config: serve indices & score reference
+    const teamConfig = {
+      teamA: { positions: [0, 1], score: currentScore.teamA },
+      teamB: { positions: [2, 3], score: currentScore.teamB },
+    };
+
+    const { positions, score } = teamConfig[scoringTeam];
+    const [even, odd] = positions;
+
+    if (isRoundOver) {
+      setCurrentServePosition(even);
+    } else if (positions.includes(currentServePositon)) {
+      // Toggle positions if serving inside this team’s zone
+      if (currentServePositon === even) {
+        playerPositionCopy[scoringTeam][even] = "playerB";
+        playerPositionCopy[scoringTeam][odd] = "playerA";
+        setCurrentServePosition(odd);
+      } else {
+        playerPositionCopy[scoringTeam][even] = "playerA";
+        playerPositionCopy[scoringTeam][odd] = "playerB";
+        setCurrentServePosition(even);
+      }
+      setPlayerPosition(playerPositionCopy);
+    } else {
+      // Decide serve side based on even/odd score
+      setCurrentServePosition(score % 2 === 0 ? even : odd);
+    }
   }
 
   const handleUndo = () => {
@@ -126,35 +154,12 @@ export default function Home() {
     setPlayHistory(playHistoryCopy);
   }
 
-  const handleCurrentPlayer = (scoringTeam: ITeam, currentScore: IScore) => {
-    const playerPositionCopy = { ...playerPosition };
-
-    // team config: serve indices & score reference
-    const teamConfig = {
-      teamA: { positions: [0, 1], score: currentScore.teamA },
-      teamB: { positions: [2, 3], score: currentScore.teamB },
-    };
-
-    const { positions, score } = teamConfig[scoringTeam];
-    const [even, odd] = positions;
-
-    if (positions.includes(currentServePositon)) {
-      // Toggle positions if serving inside this team’s zone
-      if (currentServePositon === even) {
-        playerPositionCopy[scoringTeam][even] = "playerB";
-        playerPositionCopy[scoringTeam][odd] = "playerA";
-        setCurrentPosition(odd);
-      } else {
-        playerPositionCopy[scoringTeam][even] = "playerA";
-        playerPositionCopy[scoringTeam][odd] = "playerB";
-        setCurrentPosition(even);
-      }
-      setPlayerPosition(playerPositionCopy);
-    } else {
-      // Decide serve side based on even/odd score
-      setCurrentPosition(score % 2 === 0 ? even : odd);
-    }
-  };
+  const startNewGame = () => {
+    setWinner('');
+    resetCurrentRound();
+    resetScore();
+    setServingSide('teamA');
+  }
 
   return (
     <div>
