@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 
 const useAppStore = create<IAppState>()((set) => ({
+    teamA: 'Team A',
+    teamAPlayerA: 'Player A',
+    teamAPlayerB: 'Player B',
+    teamB: 'Team B',
+    teamBPlayerA: 'Player A',
+    teamBPlayerB: 'Player B',
     winner: '',
     noOfRounds: 3,
     score: [{
@@ -9,6 +15,12 @@ const useAppStore = create<IAppState>()((set) => ({
     }],
     currentRound: 0,
     servingSide: 'teamA',
+    setTeamA: (value: string) => set({ teamA: value }),
+    setTeamAPlayerA: (value: string) => set({ teamAPlayerA: value }),
+    setTeamAPlayerB: (value: string) => set({ teamAPlayerB: value }),
+    setTeamB: (value: string) => set({ teamA: value }),
+    setTeamBPlayerA: (value: string) => set({ teamBPlayerA: value }),
+    setTeamBPlayerB: (value: string) => set({ teamBPlayerB: value }),
     setWinner: (value: string) => set({ winner: value }),
     setNoOfRounds: (value: number) => set({ noOfRounds: value }),
     setScore: (value: IScore[]) => set({ score: value }),
@@ -35,11 +47,23 @@ export type IScore = {
 };
 
 export type IAppState = {
+    teamA: string;
+    teamAPlayerA: string;
+    teamAPlayerB: string;
+    teamB: string;
+    teamBPlayerA: string;
+    teamBPlayerB: string;
     winner: string;
     noOfRounds: number;
     score: IScore[];
     currentRound: number;
     servingSide: ITeam;
+    setTeamA: (value: string) => void,
+    setTeamAPlayerA: (value: string) => void,
+    setTeamAPlayerB: (value: string) => void,
+    setTeamB: (value: string) => void,
+    setTeamBPlayerA: (value: string) => void,
+    setTeamBPlayerB: (value: string) => void,
     setWinner: (value: string) => void;
     incrementRound: () => void;
     resetCurrentRound: () => void;
