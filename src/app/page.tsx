@@ -1,9 +1,20 @@
 'use client'
 
-import { IScore, ITeam } from "@/app/_store/useAppStore";
+import useAppStore, { IAppState, IScore, ITeam } from "@/app/_store/useAppStore";
 
 export default function Home() {
-
+  const teamA = useAppStore((state: IAppState) => state.teamA);
+  const teamAPlayerA = useAppStore((state: IAppState) => state.teamAPlayerA);
+  const teamAPlayerB = useAppStore((state: IAppState) => state.teamAPlayerB);
+  const setTeamA = useAppStore((state: IAppState) => state.setTeamA);
+  const setTeamAPlayerA = useAppStore((state: IAppState) => state.setTeamAPlayerA);
+  const setTeamAPlayerB = useAppStore((state: IAppState) => state.setTeamAPlayerB);
+  const teamB = useAppStore((state: IAppState) => state.teamB);
+  const teamBPlayerA = useAppStore((state: IAppState) => state.teamBPlayerA);
+  const teamBPlayerB = useAppStore((state: IAppState) => state.teamBPlayerB);
+  const setTeamB = useAppStore((state: IAppState) => state.setTeamB);
+  const setTeamBPlayerA = useAppStore((state: IAppState) => state.setTeamBPlayerA);
+  const setTeamBPlayerB = useAppStore((state: IAppState) => state.setTeamBPlayerB);
 
   return (
     <div className="container mx-auto px-8">
@@ -14,6 +25,8 @@ export default function Home() {
             <input
               type="text"
               id="teamA"
+              value={teamA}
+              onChange={(event) => setTeamA(event.target.value)}
               className={`
               bg-slate-200 dark:bg-slate-800
               placeholder:text-slate-500 dark:placeholder:text-slate-400
@@ -25,6 +38,8 @@ export default function Home() {
             <input
               type="text"
               id="teamA-playerA"
+              value={teamAPlayerA}
+              onChange={(event) => setTeamAPlayerA(event.target.value)}
               className={`
               bg-slate-200 dark:bg-slate-800
               placeholder:text-slate-500 dark:placeholder:text-slate-400
@@ -36,6 +51,8 @@ export default function Home() {
             <input
               type="text"
               id="teamA-playerB"
+              value={teamAPlayerB}
+              onChange={(event) => setTeamAPlayerB(event.target.value)}
               className={`
               bg-slate-200 dark:bg-slate-800
               placeholder:text-slate-500 dark:placeholder:text-slate-400
@@ -59,6 +76,8 @@ export default function Home() {
             <input
               type="text"
               id="teamB"
+              value={teamB}
+              onChange={(event) => setTeamB(event.target.value)}
               className={`
               bg-slate-200 dark:bg-slate-800
               placeholder:text-slate-500 dark:placeholder:text-slate-400
@@ -70,6 +89,8 @@ export default function Home() {
             <input
               type="text"
               id="teamB-playerA"
+              value={teamBPlayerA}
+              onChange={(event) => setTeamBPlayerA(event.target.value)}
               className={`
               bg-slate-200 dark:bg-slate-800
               placeholder:text-slate-500 dark:placeholder:text-slate-400
@@ -81,6 +102,8 @@ export default function Home() {
             <input
               type="text"
               id="teamB-playerB"
+              value={teamBPlayerB}
+              onChange={(event) => setTeamBPlayerB(event.target.value)}
               className={`
               bg-slate-200 dark:bg-slate-800
               placeholder:text-slate-500 dark:placeholder:text-slate-400
