@@ -1,6 +1,6 @@
 'use client'
 
-import useAppStore, { IAppState, IScore, ITeam } from "@/app/_store/useAppStore";
+import useAppStore, { IAppState, IScore, ITeam } from "@/app/_stores/useAppStore";
 
 export default function Home() {
   const teamA = useAppStore((state: IAppState) => state.teamA);
@@ -9,6 +9,7 @@ export default function Home() {
   const setTeamA = useAppStore((state: IAppState) => state.setTeamA);
   const setTeamAPlayerA = useAppStore((state: IAppState) => state.setTeamAPlayerA);
   const setTeamAPlayerB = useAppStore((state: IAppState) => state.setTeamAPlayerB);
+
   const teamB = useAppStore((state: IAppState) => state.teamB);
   const teamBPlayerA = useAppStore((state: IAppState) => state.teamBPlayerA);
   const teamBPlayerB = useAppStore((state: IAppState) => state.teamBPlayerB);

@@ -1,9 +1,17 @@
 'use client'
 
 import { useState } from "react";
-import useAppStore, { IAppState, IScore, ITeam } from "@/app/_store/useAppStore";
+import useAppStore, { IAppState, IScore, ITeam } from "@/app/_stores/useAppStore";
 
 export default function Match() {
+  const teamA = useAppStore((state: IAppState) => state.teamA);
+  const teamAPlayerA = useAppStore((state: IAppState) => state.teamAPlayerA);
+  const teamAPlayerB = useAppStore((state: IAppState) => state.teamAPlayerB);
+
+  const teamB = useAppStore((state: IAppState) => state.teamB);
+  const teamBPlayerA = useAppStore((state: IAppState) => state.teamBPlayerA);
+  const teamBPlayerB = useAppStore((state: IAppState) => state.teamBPlayerB);
+
   const currentRound = useAppStore((state: IAppState) => state.currentRound);
   const incrementRound = useAppStore((state: IAppState) => state.incrementRound);
   const resetCurrentRound = useAppStore((state: IAppState) => state.resetCurrentRound);
@@ -20,8 +28,8 @@ export default function Match() {
   const setWinner = useAppStore((state: IAppState) => state.setWinner);
 
   const teamNames = {
-    'teamA': 'Team A',
-    'teamB': 'Team B'
+    'teamA': teamA,
+    'teamB': teamB
   };
 
   const [playerPosition, setPlayerPosition] = useState<IPlayerPosition>({
@@ -177,8 +185,8 @@ export default function Match() {
         : <></>}
       <div>
         <h3>Team A</h3>
-        <p>Player A1</p>
-        <p>Player A2</p>
+        <p>{teamAPlayerA}</p>
+        <p>{teamAPlayerB}</p>
         <div>
           <button
             disabled={winner.length > 0}
@@ -189,8 +197,8 @@ export default function Match() {
       </div>
       <div>
         <h3>Team B</h3>
-        <p>Player B1</p>
-        <p>Player B2</p>
+        <p>{teamBPlayerA}</p>
+        <p>{teamBPlayerB}</p>
         <div>
           <button
             disabled={winner.length > 0}

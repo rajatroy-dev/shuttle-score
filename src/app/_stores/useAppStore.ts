@@ -16,7 +16,10 @@ const useAppStore = create<IAppState>()((set) => ({
     currentRound: 0,
     servingSide: 'teamA',
     setTeamA: (value: string) => set({ teamA: value }),
-    setTeamAPlayerA: (value: string) => set({ teamAPlayerA: value }),
+    setTeamAPlayerA: (value: string) => {
+        console.log('Store', value);
+        set({ teamAPlayerA: value });
+    },
     setTeamAPlayerB: (value: string) => set({ teamAPlayerB: value }),
     setTeamB: (value: string) => set({ teamA: value }),
     setTeamBPlayerA: (value: string) => set({ teamBPlayerA: value }),
