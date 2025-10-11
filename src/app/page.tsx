@@ -1,21 +1,26 @@
 'use client'
 
-import useAppStore, { IAppState, IScore, ITeam } from "@/app/_stores/useAppStore";
+import { useAppStore } from "@/app/_providers/app-provider";
+import { IAppStore } from "@/app/_stores/app-store";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const teamA = useAppStore((state: IAppState) => state.teamA);
-  const teamAPlayerA = useAppStore((state: IAppState) => state.teamAPlayerA);
-  const teamAPlayerB = useAppStore((state: IAppState) => state.teamAPlayerB);
-  const setTeamA = useAppStore((state: IAppState) => state.setTeamA);
-  const setTeamAPlayerA = useAppStore((state: IAppState) => state.setTeamAPlayerA);
-  const setTeamAPlayerB = useAppStore((state: IAppState) => state.setTeamAPlayerB);
+  const {
+    teamA,
+    teamAPlayerA,
+    teamAPlayerB,
+    setTeamA,
+    setTeamAPlayerA,
+    setTeamAPlayerB,
+    teamB,
+    teamBPlayerA,
+    teamBPlayerB,
+    setTeamB,
+    setTeamBPlayerA,
+    setTeamBPlayerB
+  } = useAppStore((state: IAppStore) => state);
 
-  const teamB = useAppStore((state: IAppState) => state.teamB);
-  const teamBPlayerA = useAppStore((state: IAppState) => state.teamBPlayerA);
-  const teamBPlayerB = useAppStore((state: IAppState) => state.teamBPlayerB);
-  const setTeamB = useAppStore((state: IAppState) => state.setTeamB);
-  const setTeamBPlayerA = useAppStore((state: IAppState) => state.setTeamBPlayerA);
-  const setTeamBPlayerB = useAppStore((state: IAppState) => state.setTeamBPlayerB);
+  const router = useRouter();
 
   return (
     <div className="container mx-auto px-8">
@@ -116,7 +121,10 @@ export default function Home() {
       </div>
 
       <a
-        href="/match"
+        onClick={(e) => {
+          e.preventDefault();
+          router.push('/match');
+        }}
         className={`
           block text-center my-4 w-full border-2 rounded py-2 font-bold
           bg-slate-200 dark:bg-slate-800
@@ -126,13 +134,3 @@ export default function Home() {
     </div>
   );
 }
-
-type IHistory = {
-  scoringTeam: 'teamA' | 'teamB';
-  roundNumber: number;
-  score: IScore[];
-};
-
-type IPlayerPosition = {
-  [team in ITeam]: { [key: number]: string; };
-};

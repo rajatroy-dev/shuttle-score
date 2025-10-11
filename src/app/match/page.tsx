@@ -1,31 +1,29 @@
 'use client'
 
 import { useState } from "react";
-import useAppStore, { IAppState, IScore, ITeam } from "@/app/_stores/useAppStore";
+import { useAppStore } from "@/app/_providers/app-provider";
+import { IAppStore, IScore, ITeam } from "@/app/_stores/app-store";
 
 export default function Match() {
-  const teamA = useAppStore((state: IAppState) => state.teamA);
-  const teamAPlayerA = useAppStore((state: IAppState) => state.teamAPlayerA);
-  const teamAPlayerB = useAppStore((state: IAppState) => state.teamAPlayerB);
-
-  const teamB = useAppStore((state: IAppState) => state.teamB);
-  const teamBPlayerA = useAppStore((state: IAppState) => state.teamBPlayerA);
-  const teamBPlayerB = useAppStore((state: IAppState) => state.teamBPlayerB);
-
-  const currentRound = useAppStore((state: IAppState) => state.currentRound);
-  const incrementRound = useAppStore((state: IAppState) => state.incrementRound);
-  const resetCurrentRound = useAppStore((state: IAppState) => state.resetCurrentRound);
-  const setCurrentRound = useAppStore((state: IAppState) => state.setCurrentRound);
-
-  const servingSide = useAppStore((state: IAppState) => state.servingSide);
-  const setServingSide = useAppStore((state: IAppState) => state.setServingSide);
-
-  const score = useAppStore((state: IAppState) => state.score);
-  const setScore = useAppStore((state: IAppState) => state.setScore);
-  const resetScore = useAppStore((state: IAppState) => state.resetScore);
-
-  const winner = useAppStore((state: IAppState) => state.winner);
-  const setWinner = useAppStore((state: IAppState) => state.setWinner);
+  const {
+      teamA,
+      teamAPlayerA,
+      teamAPlayerB,
+      teamB,
+      teamBPlayerA,
+      teamBPlayerB,
+      currentRound,
+      incrementRound,
+      resetCurrentRound,
+      setCurrentRound,
+      servingSide,
+      setServingSide,
+      score,
+      setScore,
+      resetScore,
+      winner,
+      setWinner
+    } = useAppStore((state: IAppStore) => state);
 
   const teamNames = {
     'teamA': teamA,

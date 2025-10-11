@@ -1,6 +1,6 @@
 import { createStore } from 'zustand/vanilla';
 
-export type IIAppState = {
+export type IAppState = {
     teamA: string;
     teamAPlayerA: string;
     teamAPlayerB: string;
@@ -30,9 +30,9 @@ export type IAppActions = {
     resetScore: () => void;
 };
 
-export type IAppStore = IIAppState & IAppActions;
+export type IAppStore = IAppState & IAppActions;
 
-export const initAppStore = (): IIAppState => {
+export const initAppStore = (): IAppState => {
     return {
         teamA: 'Team A',
         teamAPlayerA: 'Player A',
@@ -51,7 +51,7 @@ export const initAppStore = (): IIAppState => {
     }
 }
 
-export const appInitialState: IIAppState = {
+export const appInitialState: IAppState = {
     teamA: 'Team A',
     teamAPlayerA: 'Player A',
     teamAPlayerB: 'Player B',
@@ -68,7 +68,7 @@ export const appInitialState: IIAppState = {
     servingSide: 'teamA'
 };
 
-export const createAppStore = (initState: IIAppState = appInitialState) => {
+export const createAppStore = (initState: IAppState = appInitialState) => {
     return createStore<IAppStore>()((set) => ({
         ...initState,
         setTeamA: (value: string) => set({ teamA: value }),
@@ -102,31 +102,4 @@ export type IScore = {
     teamA: number;
     teamB: number;
     winner?: 'teamA' | 'teamB';
-};
-
-export type IAppState = {
-    teamA: string;
-    teamAPlayerA: string;
-    teamAPlayerB: string;
-    teamB: string;
-    teamBPlayerA: string;
-    teamBPlayerB: string;
-    winner: string;
-    noOfRounds: number;
-    score: IScore[];
-    currentRound: number;
-    servingSide: ITeam;
-    setTeamA: (value: string) => void,
-    setTeamAPlayerA: (value: string) => void,
-    setTeamAPlayerB: (value: string) => void,
-    setTeamB: (value: string) => void,
-    setTeamBPlayerA: (value: string) => void,
-    setTeamBPlayerB: (value: string) => void,
-    setWinner: (value: string) => void;
-    incrementRound: () => void;
-    resetCurrentRound: () => void;
-    setCurrentRound: (value: number) => void;
-    setServingSide: (value: ITeam) => void;
-    setScore: (value: IScore[]) => void;
-    resetScore: () => void;
 };

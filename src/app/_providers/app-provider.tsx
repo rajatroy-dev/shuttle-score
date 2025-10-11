@@ -26,7 +26,7 @@ export const AppStoreProvider = ({ children }: AppStoreProviderProps) => {
     );
 };
 
-export const useApptore = <T,>(selector: (store: IAppStore) => T,): T => {
+export const useAppStore = <T,>(selector: (store: IAppStore) => T,): T => {
     const appStoreContext = useContext(AppStoreContext);
 
     if (!appStoreContext) {
