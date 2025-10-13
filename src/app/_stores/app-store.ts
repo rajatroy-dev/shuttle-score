@@ -1,6 +1,7 @@
 import { createStore } from 'zustand/vanilla';
 
 export type IAppState = {
+    matchType: IMatchType;
     teamA: string;
     teamAPlayerA: string;
     teamAPlayerB: string;
@@ -15,6 +16,7 @@ export type IAppState = {
 };
 
 export type IAppActions = {
+    setMatchType: (value: IMatchType) => void,
     setTeamA: (value: string) => void,
     setTeamAPlayerA: (value: string) => void,
     setTeamAPlayerB: (value: string) => void,
@@ -34,6 +36,7 @@ export type IAppStore = IAppState & IAppActions;
 
 export const initAppStore = (): IAppState => {
     return {
+        matchType: 'singles',
         teamA: 'Team A',
         teamAPlayerA: 'Player A',
         teamAPlayerB: 'Player B',
@@ -52,6 +55,7 @@ export const initAppStore = (): IAppState => {
 }
 
 export const appInitialState: IAppState = {
+    matchType: 'singles',
     teamA: 'Team A',
     teamAPlayerA: 'Player A',
     teamAPlayerB: 'Player B',
@@ -71,6 +75,7 @@ export const appInitialState: IAppState = {
 export const createAppStore = (initState: IAppState = appInitialState) => {
     return createStore<IAppStore>()((set) => ({
         ...initState,
+        setMatchType: (value: IMatchType) => set({ matchType: value }),
         setTeamA: (value: string) => set({ teamA: value }),
         setTeamAPlayerA: (value: string) => {
             console.log('Store', value);
@@ -97,6 +102,8 @@ export const createAppStore = (initState: IAppState = appInitialState) => {
 }
 
 export type ITeam = 'teamA' | 'teamB';
+
+export type IMatchType = 'singles' | 'doubles';
 
 export type IScore = {
     teamA: number;
