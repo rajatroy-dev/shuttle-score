@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const {
-    matchType,
     setMatchType,
   } = useAppStore((state: IAppStore) => state);
 
@@ -19,7 +18,7 @@ export default function Home() {
           onClick={(e) => {
             e.preventDefault();
             setMatchType('singles');
-            router.push(`/team-setup?type=${matchType}`);
+            router.push('/team-setup');
           }}
           className={`
             block my-4 py-2 w-full h-64
@@ -43,7 +42,7 @@ export default function Home() {
           onClick={(e) => {
             e.preventDefault();
             setMatchType('doubles');
-            router.push(`/team-setup?type=${matchType}`);
+            router.push('/team-setup');
           }}
           className={`
             block my-4 py-2 w-full h-64

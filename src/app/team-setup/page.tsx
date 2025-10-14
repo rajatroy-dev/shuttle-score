@@ -4,8 +4,9 @@ import { useAppStore } from "@/app/_providers/app-provider";
 import { IAppStore } from "@/app/_stores/app-store";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function TeamSetup() {
   const {
+    matchType,
     teamA,
     teamAPlayerA,
     teamAPlayerB,
@@ -19,6 +20,8 @@ export default function Home() {
     setTeamBPlayerA,
     setTeamBPlayerB
   } = useAppStore((state: IAppStore) => state);
+
+  console.log(matchType);
 
   const router = useRouter();
 

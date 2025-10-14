@@ -6,24 +6,24 @@ import { IAppStore, IScore, ITeam } from "@/app/_stores/app-store";
 
 export default function Match() {
   const {
-      teamA,
-      teamAPlayerA,
-      teamAPlayerB,
-      teamB,
-      teamBPlayerA,
-      teamBPlayerB,
-      currentRound,
-      incrementRound,
-      resetCurrentRound,
-      setCurrentRound,
-      servingSide,
-      setServingSide,
-      score,
-      setScore,
-      resetScore,
-      winner,
-      setWinner
-    } = useAppStore((state: IAppStore) => state);
+    teamA,
+    teamAPlayerA,
+    teamAPlayerB,
+    teamB,
+    teamBPlayerA,
+    teamBPlayerB,
+    currentRound,
+    incrementRound,
+    resetCurrentRound,
+    setCurrentRound,
+    servingSide,
+    setServingSide,
+    score,
+    setScore,
+    resetScore,
+    winner,
+    setWinner
+  } = useAppStore((state: IAppStore) => state);
 
   const teamNames = {
     'teamA': teamA,
@@ -73,10 +73,10 @@ export default function Match() {
     playHistoryCopy.push({
       scoringTeam: scoringTeam,
       roundNumber: currentRound,
-      score: scoreCopy
+      score: scoreCopy,
+      servePosition: currentServePositon
     });
-    handleCurrentPlayer(scoringTeam, localScore, isRoundOver);
-    setPlayHistory(playHistoryCopy);
+    handleCurrentPlayer(scoringTeam, localScore, isRoundOver, playHistoryCopy);
   }
 
   const declareRoundWinner = (
@@ -117,7 +117,7 @@ export default function Match() {
     }
   }
 
-  const handleCurrentPlayer = (scoringTeam: ITeam, currentScore: IScore, isRoundOver: boolean) => {
+  const handleCurrentPlayer = (scoringTeam: ITeam, currentScore: IScore, isRoundOver: boolean, playHistory: IHistory[]) => {
     const playerPositionCopy = { ...playerPosition };
 
     // team config: serve indices & score reference
@@ -131,22 +131,29 @@ export default function Match() {
 
     if (isRoundOver) {
       setCurrentServePosition(even);
+      playHistory[playHistory.length - 1].servePosition = even;
     } else if (positions.includes(currentServePositon)) {
       // Toggle positions if serving inside this team’s zone
       if (currentServePositon === even) {
         playerPositionCopy[scoringTeam][even] = "playerB";
         playerPositionCopy[scoringTeam][odd] = "playerA";
         setCurrentServePosition(odd);
+        playHistory[playHistory.length - 1].servePosition = odd;
       } else {
         playerPositionCopy[scoringTeam][even] = "playerA";
         playerPositionCopy[scoringTeam][odd] = "playerB";
         setCurrentServePosition(even);
+        playHistory[playHistory.length - 1].servePosition = even;
       }
       setPlayerPosition(playerPositionCopy);
     } else {
       // Decide serve side based on even/odd score
-      setCurrentServePosition(score % 2 === 0 ? even : odd);
+      const spos = score % 2 === 0 ? even : odd;
+      setCurrentServePosition(spos);
+      playHistory[playHistory.length - 1].servePosition = spos;
     }
+
+    setPlayHistory(playHistory);
   }
 
   const handleUndo = () => {
@@ -156,6 +163,7 @@ export default function Match() {
     setServingSide(previousRally.scoringTeam);
     setScore(previousRally.score);
     setWinner('');
+    setCurrentServePosition(previousRally.servePosition);
     playHistoryCopy.pop();
     setPlayHistory(playHistoryCopy);
   }
@@ -223,6 +231,7 @@ type IHistory = {
   scoringTeam: 'teamA' | 'teamB';
   roundNumber: number;
   score: IScore[];
+  servePosition: number;
 };
 
 type IPlayerPosition = {
