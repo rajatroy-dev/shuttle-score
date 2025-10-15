@@ -41,8 +41,8 @@ export const initAppStore = (): IAppState => {
         teamAPlayerA: 'Player A',
         teamAPlayerB: 'Player B',
         teamB: 'Team B',
-        teamBPlayerA: 'Player A',
-        teamBPlayerB: 'Player B',
+        teamBPlayerA: 'Player C',
+        teamBPlayerB: 'Player D',
         winner: '',
         noOfRounds: 3,
         score: [{
@@ -60,8 +60,8 @@ export const appInitialState: IAppState = {
     teamAPlayerA: 'Player A',
     teamAPlayerB: 'Player B',
     teamB: 'Team B',
-    teamBPlayerA: 'Player A',
-    teamBPlayerB: 'Player B',
+    teamBPlayerA: 'Player C',
+    teamBPlayerB: 'Player D',
     winner: '',
     noOfRounds: 3,
     score: [{
