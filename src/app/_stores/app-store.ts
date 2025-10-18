@@ -2,12 +2,14 @@ import { createStore } from 'zustand/vanilla';
 
 export type IAppState = {
     matchType: IMatchType;
+    playerA: string;
+    playerB: string;
     teamA: string;
     teamAPlayerA: string;
     teamAPlayerB: string;
     teamB: string;
-    teamBPlayerA: string;
-    teamBPlayerB: string;
+    teamBPlayerC: string;
+    teamBPlayerD: string;
     winner: string;
     noOfRounds: number;
     score: IScore[];
@@ -17,12 +19,14 @@ export type IAppState = {
 
 export type IAppActions = {
     setMatchType: (value: IMatchType) => void,
+    setPlayerA: (value: string) => void,
+    setPlayerB: (value: string) => void,
     setTeamA: (value: string) => void,
     setTeamAPlayerA: (value: string) => void,
     setTeamAPlayerB: (value: string) => void,
     setTeamB: (value: string) => void,
-    setTeamBPlayerA: (value: string) => void,
-    setTeamBPlayerB: (value: string) => void,
+    setTeamBPlayerC: (value: string) => void,
+    setTeamBPlayerD: (value: string) => void,
     setWinner: (value: string) => void;
     incrementRound: () => void;
     resetCurrentRound: () => void;
@@ -37,12 +41,14 @@ export type IAppStore = IAppState & IAppActions;
 export const initAppStore = (): IAppState => {
     return {
         matchType: 'singles',
+        playerA: 'Player A',
+        playerB: 'Player B',
         teamA: 'Team A',
         teamAPlayerA: 'Player A',
         teamAPlayerB: 'Player B',
         teamB: 'Team B',
-        teamBPlayerA: 'Player C',
-        teamBPlayerB: 'Player D',
+        teamBPlayerC: 'Player C',
+        teamBPlayerD: 'Player D',
         winner: '',
         noOfRounds: 3,
         score: [{
@@ -56,12 +62,14 @@ export const initAppStore = (): IAppState => {
 
 export const appInitialState: IAppState = {
     matchType: 'singles',
+    playerA: 'Player A',
+    playerB: 'Player B',
     teamA: 'Team A',
     teamAPlayerA: 'Player A',
     teamAPlayerB: 'Player B',
     teamB: 'Team B',
-    teamBPlayerA: 'Player C',
-    teamBPlayerB: 'Player D',
+    teamBPlayerC: 'Player C',
+    teamBPlayerD: 'Player D',
     winner: '',
     noOfRounds: 3,
     score: [{
@@ -76,6 +84,8 @@ export const createAppStore = (initState: IAppState = appInitialState) => {
     return createStore<IAppStore>()((set) => ({
         ...initState,
         setMatchType: (value: IMatchType) => set({ matchType: value }),
+        setPlayerA: (value: string) => set({ playerA: value }),
+        setPlayerB: (value: string) => set({ playerB: value }),
         setTeamA: (value: string) => set({ teamA: value }),
         setTeamAPlayerA: (value: string) => {
             console.log('Store', value);
@@ -83,8 +93,8 @@ export const createAppStore = (initState: IAppState = appInitialState) => {
         },
         setTeamAPlayerB: (value: string) => set({ teamAPlayerB: value }),
         setTeamB: (value: string) => set({ teamA: value }),
-        setTeamBPlayerA: (value: string) => set({ teamBPlayerA: value }),
-        setTeamBPlayerB: (value: string) => set({ teamBPlayerB: value }),
+        setTeamBPlayerC: (value: string) => set({ teamBPlayerC: value }),
+        setTeamBPlayerD: (value: string) => set({ teamBPlayerD: value }),
         setWinner: (value: string) => set({ winner: value }),
         setNoOfRounds: (value: number) => set({ noOfRounds: value }),
         setScore: (value: IScore[]) => set({ score: value }),

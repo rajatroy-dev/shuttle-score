@@ -13,11 +13,11 @@ export default function DoublesSetup() {
     setTeamAPlayerA,
     setTeamAPlayerB,
     teamB,
-    teamBPlayerA,
-    teamBPlayerB,
+    teamBPlayerC,
+    teamBPlayerD,
     setTeamB,
-    setTeamBPlayerA,
-    setTeamBPlayerB
+    setTeamBPlayerC,
+    setTeamBPlayerD
   } = useAppStore((state: IAppStore) => state);
 
   const router = useRouter();
@@ -93,8 +93,8 @@ export default function DoublesSetup() {
             <input
               type="text"
               id="teamB-playerA"
-              value={teamBPlayerA}
-              onChange={(event) => setTeamBPlayerA(event.target.value)}
+              value={teamBPlayerC}
+              onChange={(event) => setTeamBPlayerC(event.target.value)}
               className={`
               bg-slate-200 dark:bg-slate-800
               placeholder:text-slate-500 dark:placeholder:text-slate-400
@@ -106,8 +106,8 @@ export default function DoublesSetup() {
             <input
               type="text"
               id="teamB-playerB"
-              value={teamBPlayerB}
-              onChange={(event) => setTeamBPlayerB(event.target.value)}
+              value={teamBPlayerD}
+              onChange={(event) => setTeamBPlayerD(event.target.value)}
               className={`
               bg-slate-200 dark:bg-slate-800
               placeholder:text-slate-500 dark:placeholder:text-slate-400

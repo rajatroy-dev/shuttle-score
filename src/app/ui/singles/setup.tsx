@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 
 export default function SinglesSetup() {
   const {
-    teamAPlayerA,
-    setTeamAPlayerA,
-    teamBPlayerA,
-    setTeamBPlayerA,
+    playerA,
+    setPlayerA,
+    playerB,
+    setPlayerB,
   } = useAppStore((state: IAppStore) => state);
 
   const router = useRouter();
@@ -25,8 +25,8 @@ export default function SinglesSetup() {
             <input
               type="text"
               id="playerA"
-              value={teamAPlayerA}
-              onChange={(event) => setTeamAPlayerA(event.target.value)}
+              value={playerA}
+              onChange={(event) => setPlayerA(event.target.value)}
               className={`
                 bg-slate-200 dark:bg-slate-800 placeholder:text-slate-500 dark:placeholder:text-slate-400
                 rounded 
@@ -59,8 +59,8 @@ export default function SinglesSetup() {
             <input
               type="text"
               id="playerB"
-              value={teamBPlayerA}
-              onChange={(event) => setTeamBPlayerA(event.target.value)}
+              value={playerB}
+              onChange={(event) => setPlayerB(event.target.value)}
               className={`
                 bg-slate-200 dark:bg-slate-800 placeholder:text-slate-500 dark:placeholder:text-slate-400
                 rounded 

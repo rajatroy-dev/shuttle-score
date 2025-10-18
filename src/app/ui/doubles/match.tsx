@@ -10,8 +10,8 @@ export default function DoublesMatch() {
     teamAPlayerA,
     teamAPlayerB,
     teamB,
-    teamBPlayerA,
-    teamBPlayerB,
+    teamBPlayerC,
+    teamBPlayerD,
     currentRound,
     incrementRound,
     resetCurrentRound,
@@ -203,8 +203,8 @@ export default function DoublesMatch() {
       </div>
       <div>
         <h3>Team B</h3>
-        <p>{teamBPlayerA}</p>
-        <p>{teamBPlayerB}</p>
+        <p>{teamBPlayerC}</p>
+        <p>{teamBPlayerD}</p>
         <div>
           <button
             disabled={winner.length > 0}

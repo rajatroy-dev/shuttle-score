@@ -6,12 +6,10 @@ import { IAppStore, IScore, ITeam } from "@/app/_stores/app-store";
 
 export default function SinglesMatch() {
   const {
-    teamA,
     teamAPlayerA,
     teamAPlayerB,
-    teamB,
-    teamBPlayerA,
-    teamBPlayerB,
+    teamBPlayerC,
+    teamBPlayerD: teamBPlayerB,
     currentRound,
     incrementRound,
     resetCurrentRound,
@@ -26,19 +24,13 @@ export default function SinglesMatch() {
   } = useAppStore((state: IAppStore) => state);
 
   const teamNames = {
-    'teamA': teamA,
-    'teamB': teamB
+    'teamA': teamAPlayerA,
+    'teamB': teamBPlayerC
   };
 
   const [playerPosition, setPlayerPosition] = useState<IPlayerPosition>({
-    'teamA': {
-      0: 'playerA',
-      1: 'playerB'
-    },
-    'teamB': {
-      2: 'playerA',
-      3: 'playerB'
-    }
+    0: 'playerA',
+    1: 'playerB'
   });
 
   const [currentServePositon, setCurrentServePosition] = useState(0);
@@ -203,7 +195,7 @@ export default function SinglesMatch() {
       </div>
       <div>
         <h3>Team B</h3>
-        <p>{teamBPlayerA}</p>
+        <p>{teamBPlayerC}</p>
         <p>{teamBPlayerB}</p>
         <div>
           <button
@@ -235,5 +227,5 @@ type IHistory = {
 };
 
 type IPlayerPosition = {
-  [team in ITeam]: { [key: number]: string; };
+  [team in 0 | 1]: { [key: number]: string; };
 };
