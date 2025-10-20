@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import { useAppStore } from "@/app/_providers/app-provider";
-import { IAppStore, IScore, ITeam } from "@/app/_stores/app-store";
+import { IAppStore, IPlayer, IScore, ITeam } from "@/app/_stores/app-store";
 
 export default function SinglesMatch() {
   const {
-    teamAPlayerA,
-    teamAPlayerB,
-    teamBPlayerC,
-    teamBPlayerD: teamBPlayerB,
+    playerA,
+    playerB,
     currentRound,
     incrementRound,
     resetCurrentRound,
@@ -23,9 +21,9 @@ export default function SinglesMatch() {
     setWinner
   } = useAppStore((state: IAppStore) => state);
 
-  const teamNames = {
-    'teamA': teamAPlayerA,
-    'teamB': teamBPlayerC
+  const playerNames = {
+    'playerA': playerA,
+    'playerB': playerB
   };
 
   const [playerPosition, setPlayerPosition] = useState<IPlayerPosition>({
@@ -33,42 +31,39 @@ export default function SinglesMatch() {
     1: 'playerB'
   });
 
-  const [currentServePositon, setCurrentServePosition] = useState(0);
+  const [playHistory, setPlayHistory] = useState<ISinglesHistory[]>([]);
 
-  const [playHistory, setPlayHistory] = useState<IHistory[]>([]);
-
-  const handleScore = (scoringTeam: ITeam) => {
+  const handleScore = (scoringPlayer: ITeam) => {
     const localScore = {
       ...score[currentRound],
-      [scoringTeam]: score[currentRound][scoringTeam] + 1
+      [scoringPlayer]: score[currentRound][scoringPlayer]! + 1
     };
     const scoreCopy = [...score];
     const playHistoryCopy = [...playHistory];
     let isRoundOver = false;
 
     // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
-    if (localScore.teamA >= 20 && localScore.teamB >= 20) {
-      if (localScore[scoringTeam] >= 30) {
+    if (localScore.playerA! >= 20 && localScore.playerB! >= 20) {
+      if (localScore[scoringPlayer]! >= 30) {
         isRoundOver = true;
-        declareRoundWinner(localScore, scoreCopy, scoringTeam);
-      } else if (Math.abs(localScore.teamA - localScore.teamB) >= 2) {
+        declareRoundWinner(localScore, scoreCopy, scoringPlayer);
+      } else if (Math.abs(localScore.playerA! - localScore.playerB!) >= 2) {
         isRoundOver = true;
-        declareRoundWinner(localScore, scoreCopy, scoringTeam);
+        declareRoundWinner(localScore, scoreCopy, scoringPlayer);
       }
-    } else if (localScore[scoringTeam] === 21) {
+    } else if (localScore[scoringPlayer] === 21) {
       isRoundOver = true;
-      declareRoundWinner(localScore, scoreCopy, scoringTeam);
+      declareRoundWinner(localScore, scoreCopy, scoringPlayer);
     }
     scoreCopy[currentRound] = localScore;
     setScore(scoreCopy);
-    setServingSide(scoringTeam);
+    setServingSide(scoringPlayer);
     playHistoryCopy.push({
-      scoringTeam: scoringTeam,
+      scoringTeam: scoringPlayer,
       roundNumber: currentRound,
       score: scoreCopy,
-      servePosition: currentServePositon
     });
-    handleCurrentPlayer(scoringTeam, localScore, isRoundOver, playHistoryCopy);
+    handleCurrentPlayer(scoringPlayer, localScore, isRoundOver, playHistoryCopy);
   }
 
   const declareRoundWinner = (
@@ -102,10 +97,10 @@ export default function SinglesMatch() {
 
     if ((teamA - teamB === 2 && teamB === 0)
       || (teamA - teamB === 1 && teamB !== 0)) {
-      setWinner(teamNames.teamA);
+      setWinner(playerNames.playerA);
     } else if ((teamB - teamA === 2 && teamA === 0)
       || (teamB - teamA === 1 && teamA !== 0)) {
-      setWinner(teamNames.teamB);
+      setWinner(playerNames.playerB);
     }
   }
 
@@ -122,26 +117,22 @@ export default function SinglesMatch() {
     const [even, odd] = positions;
 
     if (isRoundOver) {
-      setCurrentServePosition(even);
       playHistory[playHistory.length - 1].servePosition = even;
     } else if (positions.includes(currentServePositon)) {
       // Toggle positions if serving inside this team’s zone
       if (currentServePositon === even) {
         playerPositionCopy[scoringTeam][even] = "playerB";
         playerPositionCopy[scoringTeam][odd] = "playerA";
-        setCurrentServePosition(odd);
         playHistory[playHistory.length - 1].servePosition = odd;
       } else {
         playerPositionCopy[scoringTeam][even] = "playerA";
         playerPositionCopy[scoringTeam][odd] = "playerB";
-        setCurrentServePosition(even);
         playHistory[playHistory.length - 1].servePosition = even;
       }
       setPlayerPosition(playerPositionCopy);
     } else {
       // Decide serve side based on even/odd score
-      const spos = score % 2 === 0 ? even : odd;
-      setCurrentServePosition(spos);
+      const spos = score! % 2 === 0 ? even : odd;
       playHistory[playHistory.length - 1].servePosition = spos;
     }
 
@@ -155,7 +146,6 @@ export default function SinglesMatch() {
     setServingSide(previousRally.scoringTeam);
     setScore(previousRally.score);
     setWinner('');
-    setCurrentServePosition(previousRally.servePosition);
     playHistoryCopy.pop();
     setPlayHistory(playHistoryCopy);
   }
@@ -177,14 +167,11 @@ export default function SinglesMatch() {
         : <></>}
       {winner.length <= 0
         ? <div>
-          <p>Serving Team: {teamNames[servingSide]}</p>
-          <p>Current Serve Position: {currentServePositon}</p>
+          <p>Serving Player: {playerNames[servingSide as IPlayer]}</p>
         </div>
         : <></>}
       <div>
-        <h3>Team A</h3>
-        <p>{teamAPlayerA}</p>
-        <p>{teamAPlayerB}</p>
+        <h3>{playerA}</h3>
         <div>
           <button
             disabled={winner.length > 0}
@@ -194,9 +181,7 @@ export default function SinglesMatch() {
         </div>
       </div>
       <div>
-        <h3>Team B</h3>
-        <p>{teamBPlayerC}</p>
-        <p>{teamBPlayerB}</p>
+        <h3>{playerB}</h3>
         <div>
           <button
             disabled={winner.length > 0}
@@ -219,11 +204,10 @@ export default function SinglesMatch() {
   );
 }
 
-type IHistory = {
+type ISinglesHistory = {
   scoringTeam: 'teamA' | 'teamB';
   roundNumber: number;
   score: IScore[];
-  servePosition: number;
 };
 
 type IPlayerPosition = {

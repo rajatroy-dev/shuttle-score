@@ -27,7 +27,7 @@ export default function DoublesMatch() {
 
   const teamNames = {
     'teamA': teamA,
-    'teamB': teamB
+    'teamB': teamB,
   };
 
   const [playerPosition, setPlayerPosition] = useState<IPlayerPosition>({
@@ -48,18 +48,18 @@ export default function DoublesMatch() {
   const handleScore = (scoringTeam: ITeam) => {
     const localScore = {
       ...score[currentRound],
-      [scoringTeam]: score[currentRound][scoringTeam] + 1
+      [scoringTeam]: score[currentRound][scoringTeam]! + 1
     };
     const scoreCopy = [...score];
     const playHistoryCopy = [...playHistory];
     let isRoundOver = false;
 
     // https://www.olympics.com/en/news/badminton-guide-how-to-play-rules-olympic-history
-    if (localScore.teamA >= 20 && localScore.teamB >= 20) {
-      if (localScore[scoringTeam] >= 30) {
+    if (localScore.teamA! >= 20 && localScore.teamB! >= 20) {
+      if (localScore[scoringTeam]! >= 30) {
         isRoundOver = true;
         declareRoundWinner(localScore, scoreCopy, scoringTeam);
-      } else if (Math.abs(localScore.teamA - localScore.teamB) >= 2) {
+      } else if (Math.abs(localScore.teamA! - localScore.teamB!) >= 2) {
         isRoundOver = true;
         declareRoundWinner(localScore, scoreCopy, scoringTeam);
       }
@@ -148,7 +148,7 @@ export default function DoublesMatch() {
       setPlayerPosition(playerPositionCopy);
     } else {
       // Decide serve side based on even/odd score
-      const spos = score % 2 === 0 ? even : odd;
+      const spos = score! % 2 === 0 ? even : odd;
       setCurrentServePosition(spos);
       playHistory[playHistory.length - 1].servePosition = spos;
     }
@@ -185,7 +185,7 @@ export default function DoublesMatch() {
         : <></>}
       {winner.length <= 0
         ? <div>
-          <p>Serving Team: {teamNames[servingSide]}</p>
+          <p>Serving Team: {teamNames[servingSide as ITeam]}</p>
           <p>Current Serve Position: {currentServePositon}</p>
         </div>
         : <></>}

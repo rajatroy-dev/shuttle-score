@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import DoublesSetup from "@/app/ui/doubles/setup";
 import SinglesSetup from "@/app/ui/singles/setup";
 
-export default function TeamSetup() {
+export default function Setup() {
   const {
     matchType,
   } = useAppStore((state: IAppStore) => state);

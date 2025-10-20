@@ -14,7 +14,7 @@ export type IAppState = {
     noOfRounds: number;
     score: IScore[];
     currentRound: number;
-    servingSide: ITeam;
+    servingSide: ITeam | IPlayer;
 };
 
 export type IAppActions = {
@@ -31,7 +31,7 @@ export type IAppActions = {
     incrementRound: () => void;
     resetCurrentRound: () => void;
     setCurrentRound: (value: number) => void;
-    setServingSide: (value: ITeam) => void;
+    setServingSide: (value: ITeam | IPlayer) => void;
     setScore: (value: IScore[]) => void;
     resetScore: () => void;
 };
@@ -53,7 +53,9 @@ export const initAppStore = (): IAppState => {
         noOfRounds: 3,
         score: [{
             teamA: 0,
-            teamB: 0
+            teamB: 0,
+            playerA: 0,
+            playerB: 0
         }],
         currentRound: 0,
         servingSide: 'teamA'
@@ -74,7 +76,9 @@ export const appInitialState: IAppState = {
     noOfRounds: 3,
     score: [{
         teamA: 0,
-        teamB: 0
+        teamB: 0,
+        playerA: 0,
+        playerB: 0
     }],
     currentRound: 0,
     servingSide: 'teamA'
@@ -87,10 +91,7 @@ export const createAppStore = (initState: IAppState = appInitialState) => {
         setPlayerA: (value: string) => set({ playerA: value }),
         setPlayerB: (value: string) => set({ playerB: value }),
         setTeamA: (value: string) => set({ teamA: value }),
-        setTeamAPlayerA: (value: string) => {
-            console.log('Store', value);
-            set({ teamAPlayerA: value });
-        },
+        setTeamAPlayerA: (value: string) => set({ teamAPlayerA: value }),
         setTeamAPlayerB: (value: string) => set({ teamAPlayerB: value }),
         setTeamB: (value: string) => set({ teamA: value }),
         setTeamBPlayerC: (value: string) => set({ teamBPlayerC: value }),
@@ -100,12 +101,14 @@ export const createAppStore = (initState: IAppState = appInitialState) => {
         setScore: (value: IScore[]) => set({ score: value }),
         incrementRound: () => set((state: IAppState) => ({ currentRound: state.currentRound + 1 })),
         setCurrentRound: (value: number) => set({ currentRound: value }),
-        setServingSide: (value: ITeam) => set({ servingSide: value }),
+        setServingSide: (value: ITeam | IPlayer) => set({ servingSide: value }),
         resetCurrentRound: () => set({ currentRound: 0 }),
         resetScore: () => set({
             score: [{
                 teamA: 0,
-                teamB: 0
+                teamB: 0,
+                playerA: 0,
+                playerB: 0
             }]
         })
     }));
@@ -113,10 +116,14 @@ export const createAppStore = (initState: IAppState = appInitialState) => {
 
 export type ITeam = 'teamA' | 'teamB';
 
+export type IPlayer = 'playerA' | 'playerB';
+
 export type IMatchType = 'singles' | 'doubles';
 
 export type IScore = {
-    teamA: number;
-    teamB: number;
-    winner?: 'teamA' | 'teamB';
+    teamA?: number;
+    teamB?: number;
+    playerA?: number;
+    playerB?: number;
+    winner?: 'teamA' | 'teamB' | 'playerA' | 'playerB';
 };
