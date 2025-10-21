@@ -33,10 +33,10 @@ export default function SinglesMatch() {
 
   const [playHistory, setPlayHistory] = useState<ISinglesHistory[]>([]);
 
-  const handleScore = (scoringPlayer: ITeam) => {
+  const handleScore = (scoringPlayer: IPlayer) => {
     const localScore = {
       ...score[currentRound],
-      [scoringPlayer]: score[currentRound][scoringPlayer]! + 1
+      [scoringPlayer]: score[currentRound][scoringPlayer] ?? 0 + 1
     };
     const scoreCopy = [...score];
     const playHistoryCopy = [...playHistory];
@@ -59,7 +59,7 @@ export default function SinglesMatch() {
     setScore(scoreCopy);
     setServingSide(scoringPlayer);
     playHistoryCopy.push({
-      scoringTeam: scoringPlayer,
+      scoringPlayer: scoringPlayer,
       roundNumber: currentRound,
       score: scoreCopy,
     });
@@ -69,9 +69,9 @@ export default function SinglesMatch() {
   const declareRoundWinner = (
     latestScore: IScore,
     roundScores: IScore[],
-    scoringTeam: ITeam
+    scoringPlayer: IPlayer
   ) => {
-    latestScore.winner = scoringTeam;
+    latestScore.winner = scoringPlayer;
     roundScores.length < 3 && roundScores.push({
       teamA: 0,
       teamB: 0
@@ -87,34 +87,33 @@ export default function SinglesMatch() {
   }
 
   const determineMatchWinner = (latestRoundScores: IScore[]) => {
-    let teamA = 0;
-    let teamB = 0;
+    let playerA = 0;
+    let playerB = 0;
 
     latestRoundScores.forEach(it => {
-      if (it.winner === 'teamA') ++teamA;
-      else if (it.winner === 'teamB') ++teamB;
+      if (it.winner === 'playerA') ++playerA;
+      else if (it.winner === 'playerB') ++playerB;
     });
 
-    if ((teamA - teamB === 2 && teamB === 0)
-      || (teamA - teamB === 1 && teamB !== 0)) {
+    if ((playerA - playerB === 2 && playerB === 0)
+      || (playerA - playerB === 1 && playerB !== 0)) {
       setWinner(playerNames.playerA);
-    } else if ((teamB - teamA === 2 && teamA === 0)
-      || (teamB - teamA === 1 && teamA !== 0)) {
+    } else if ((playerB - playerA === 2 && playerA === 0)
+      || (playerB - playerA === 1 && playerA !== 0)) {
       setWinner(playerNames.playerB);
     }
   }
 
-  const handleCurrentPlayer = (scoringTeam: ITeam, currentScore: IScore, isRoundOver: boolean, playHistory: IHistory[]) => {
+  const handleCurrentPlayer = (scoringTeam: IPlayer, currentScore: IScore, isRoundOver: boolean, playHistory: ISinglesHistory[]) => {
     const playerPositionCopy = { ...playerPosition };
 
     // team config: serve indices & score reference
     const teamConfig = {
-      teamA: { positions: [0, 1], score: currentScore.teamA },
-      teamB: { positions: [2, 3], score: currentScore.teamB },
+      playerA: { position: 0, score: currentScore.playerA },
+      playerB: { position: 0, score: currentScore.playerB },
     };
 
-    const { positions, score } = teamConfig[scoringTeam];
-    const [even, odd] = positions;
+    const { position, score } = teamConfig[scoringTeam];
 
     if (isRoundOver) {
       playHistory[playHistory.length - 1].servePosition = even;
@@ -143,7 +142,7 @@ export default function SinglesMatch() {
     const previousRally = playHistory[playHistory.length - 2];
     const playHistoryCopy = [...playHistory];
     setCurrentRound(previousRally.roundNumber);
-    setServingSide(previousRally.scoringTeam);
+    setServingSide(previousRally.scoringPlayer);
     setScore(previousRally.score);
     setWinner('');
     playHistoryCopy.pop();
@@ -175,7 +174,7 @@ export default function SinglesMatch() {
         <div>
           <button
             disabled={winner.length > 0}
-            onClick={() => handleScore('teamA')}>
+            onClick={() => handleScore('playerA')}>
             Score
           </button>
         </div>
@@ -185,7 +184,7 @@ export default function SinglesMatch() {
         <div>
           <button
             disabled={winner.length > 0}
-            onClick={() => handleScore('teamB')}>
+            onClick={() => handleScore('playerB')}>
             Score
           </button>
         </div>
@@ -205,11 +204,11 @@ export default function SinglesMatch() {
 }
 
 type ISinglesHistory = {
-  scoringTeam: 'teamA' | 'teamB';
+  scoringPlayer: IPlayer;
   roundNumber: number;
   score: IScore[];
 };
 
 type IPlayerPosition = {
-  [team in 0 | 1]: { [key: number]: string; };
+  [player in 0 | 1]: { [key: number]: string; };
 };
