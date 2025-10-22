@@ -10,6 +10,7 @@ export default function SinglesSetup() {
     setPlayerA,
     playerB,
     setPlayerB,
+    setServingSide
   } = useAppStore((state: IAppStore) => state);
 
   const router = useRouter();
@@ -75,6 +76,7 @@ export default function SinglesSetup() {
       <a
         onClick={(e) => {
           e.preventDefault();
+          setServingSide('playerA');
           router.push('/match');
         }}
         className={`

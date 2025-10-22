@@ -36,7 +36,7 @@ export default function SinglesMatch() {
   const handleScore = (scoringPlayer: IPlayer) => {
     const localScore = {
       ...score[currentRound],
-      [scoringPlayer]: score[currentRound][scoringPlayer] ?? 0 + 1
+      [scoringPlayer]: score[currentRound][scoringPlayer]! + 1
     };
     const scoreCopy = [...score];
     const playHistoryCopy = [...playHistory];
@@ -63,7 +63,6 @@ export default function SinglesMatch() {
       roundNumber: currentRound,
       score: scoreCopy,
     });
-    handleCurrentPlayer(scoringPlayer, localScore, isRoundOver, playHistoryCopy);
   }
 
   const declareRoundWinner = (
@@ -102,40 +101,6 @@ export default function SinglesMatch() {
       || (playerB - playerA === 1 && playerA !== 0)) {
       setWinner(playerNames.playerB);
     }
-  }
-
-  const handleCurrentPlayer = (scoringTeam: IPlayer, currentScore: IScore, isRoundOver: boolean, playHistory: ISinglesHistory[]) => {
-    const playerPositionCopy = { ...playerPosition };
-
-    // team config: serve indices & score reference
-    const teamConfig = {
-      playerA: { position: 0, score: currentScore.playerA },
-      playerB: { position: 0, score: currentScore.playerB },
-    };
-
-    const { position, score } = teamConfig[scoringTeam];
-
-    if (isRoundOver) {
-      playHistory[playHistory.length - 1].servePosition = even;
-    } else if (positions.includes(currentServePositon)) {
-      // Toggle positions if serving inside this team’s zone
-      if (currentServePositon === even) {
-        playerPositionCopy[scoringTeam][even] = "playerB";
-        playerPositionCopy[scoringTeam][odd] = "playerA";
-        playHistory[playHistory.length - 1].servePosition = odd;
-      } else {
-        playerPositionCopy[scoringTeam][even] = "playerA";
-        playerPositionCopy[scoringTeam][odd] = "playerB";
-        playHistory[playHistory.length - 1].servePosition = even;
-      }
-      setPlayerPosition(playerPositionCopy);
-    } else {
-      // Decide serve side based on even/odd score
-      const spos = score! % 2 === 0 ? even : odd;
-      playHistory[playHistory.length - 1].servePosition = spos;
-    }
-
-    setPlayHistory(playHistory);
   }
 
   const handleUndo = () => {
@@ -192,8 +157,8 @@ export default function SinglesMatch() {
       {score.map((it, index) =>
         <div key={index}>
           <p>Round: {index + 1}</p>
-          <p>Team A score: {it.teamA}</p>
-          <p>Team B score: {it.teamB}</p>
+          <p>Player A score: {it.playerA}</p>
+          <p>Player B score: {it.playerB}</p>
         </div>
       )}
       <div>

@@ -17,7 +17,8 @@ export default function DoublesSetup() {
     teamBPlayerD,
     setTeamB,
     setTeamBPlayerC,
-    setTeamBPlayerD
+    setTeamBPlayerD,
+    setServingSide
   } = useAppStore((state: IAppStore) => state);
 
   const router = useRouter();
@@ -121,6 +122,7 @@ export default function DoublesSetup() {
       <a
         onClick={(e) => {
           e.preventDefault();
+          setServingSide('teamA');
           router.push('/match');
         }}
         className={`
