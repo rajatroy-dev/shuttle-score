@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useAppStore } from "@/app/_providers/app-provider";
-import { IAppStore, IPlayer, IScore, ITeam } from "@/app/_stores/app-store";
+import { IAppStore, IPlayer, IScore } from "@/app/_stores/app-store";
 
 export default function SinglesMatch() {
   const {
@@ -63,6 +63,7 @@ export default function SinglesMatch() {
       roundNumber: currentRound,
       score: scoreCopy,
     });
+    setPlayHistory(playHistoryCopy);
   }
 
   const declareRoundWinner = (
@@ -72,8 +73,8 @@ export default function SinglesMatch() {
   ) => {
     latestScore.winner = scoringPlayer;
     roundScores.length < 3 && roundScores.push({
-      teamA: 0,
-      teamB: 0
+      playerA: 0,
+      playerB: 0
     });
     roundScores[currentRound] = latestScore;
     handleNewRound(roundScores);
@@ -104,11 +105,22 @@ export default function SinglesMatch() {
   }
 
   const handleUndo = () => {
-    const previousRally = playHistory[playHistory.length - 2];
     const playHistoryCopy = [...playHistory];
-    setCurrentRound(previousRally.roundNumber);
-    setServingSide(previousRally.scoringPlayer);
-    setScore(previousRally.score);
+    if (playHistory.length <= 1) {
+      setCurrentRound(0);
+      setServingSide('playerA');
+      setScore([{
+        teamA: 0,
+        teamB: 0,
+        playerA: 0,
+        playerB: 0
+      }]);
+    } else {
+      const previousRally = playHistory[playHistory.length - 2];
+      setCurrentRound(previousRally.roundNumber);
+      setServingSide(previousRally.scoringPlayer);
+      setScore(previousRally.score);
+    }
     setWinner('');
     playHistoryCopy.pop();
     setPlayHistory(playHistoryCopy);
@@ -118,7 +130,7 @@ export default function SinglesMatch() {
     setWinner('');
     resetCurrentRound();
     resetScore();
-    setServingSide('teamA');
+    setServingSide('playerA');
   }
 
   return (

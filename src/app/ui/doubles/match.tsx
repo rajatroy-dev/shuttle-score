@@ -157,15 +157,27 @@ export default function DoublesMatch() {
   }
 
   const handleUndo = () => {
-    const previousRally = playHistory[playHistory.length - 2];
     const playHistoryCopy = [...playHistory];
-    setCurrentRound(previousRally.roundNumber);
-    setServingSide(previousRally.scoringTeam);
-    setScore(previousRally.score);
-    setWinner('');
-    setCurrentServePosition(previousRally.servePosition);
-    playHistoryCopy.pop();
-    setPlayHistory(playHistoryCopy);
+    if (playHistory.length <= 1) {
+      setCurrentRound(0);
+      setServingSide('teamA');
+      setScore([{
+        teamA: 0,
+        teamB: 0,
+        playerA: 0,
+        playerB: 0
+      }]);
+      setCurrentServePosition(0);
+    } else {
+      const previousRally = playHistory[playHistory.length - 2];
+      setCurrentRound(previousRally.roundNumber);
+      setServingSide(previousRally.scoringTeam);
+      setScore(previousRally.score);
+      setCurrentServePosition(previousRally.servePosition);
+    }
+      setWinner('');
+      playHistoryCopy.pop();
+      setPlayHistory(playHistoryCopy);
   }
 
   const startNewGame = () => {
