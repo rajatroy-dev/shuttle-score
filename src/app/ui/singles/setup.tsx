@@ -3,6 +3,7 @@
 import { useAppStore } from "@/app/_providers/app-provider";
 import { IAppStore } from "@/app/_stores/app-store";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SinglesSetup() {
   const {
@@ -14,6 +15,42 @@ export default function SinglesSetup() {
   } = useAppStore((state: IAppStore) => state);
 
   const router = useRouter();
+
+  const [isTossed, setTossed] = useState(false);
+  const [tossWinner, setTossWinnner] = useState('TOSS');
+  const [startMatch, setStartMatch] = useState('START MATCH');
+
+  const coinToss = () => {
+    console.log(Math.random());
+    return Math.floor(Math.random() * 100) + 1
+  }
+
+  const handleToss = () => {
+    setTossWinnner(playerA);
+
+    const intervalOne = setInterval(() => setTossWinnner(playerB), 100);
+    const intervalTwo = setInterval(() => setTossWinnner(playerA), 200);
+
+    const tossResult = coinToss();
+    console.log(tossResult);
+
+    setTimeout(() => {
+      clearInterval(intervalOne);
+      clearInterval(intervalTwo);
+
+      if (tossResult % 2 === 0) {
+        setPlayerA(playerB);
+        setPlayerB(playerA);
+      }
+      setTossWinnner(tossResult % 2 !== 0 ? playerA : playerB);
+      setStartMatch(`TOSS WINNER: ${tossResult % 2 !== 0 ? playerA : playerB} !`);
+
+      setTimeout(() => setStartMatch('START MATCH'), 5000);
+
+      setTossed(true);
+    }, 5000);
+
+  }
 
   return (
     <div className="flex flex-col justify-center items-center h-screen">
@@ -73,21 +110,36 @@ export default function SinglesSetup() {
         </div>
       </div>
 
-      <a
-        onClick={(e) => {
-          e.preventDefault();
-          setServingSide('playerA');
-          router.push('/match');
-        }}
-        className={`
+      {isTossed ?
+        <a
+          onClick={(e) => {
+            e.preventDefault();
+            setServingSide('playerA');
+            router.push('/match');
+          }}
+          className={`
           block my-4 w-full py-2 
           bg-slate-200 dark:bg-slate-800 
           text-center font-bold
           shadow-md cursor-pointer
           rounded
         `}>
-        START MATCH
-      </a>
+          {startMatch}
+        </a> :
+        <a
+          onClick={(e) => {
+            e.preventDefault();
+            handleToss();
+          }}
+          className={`
+          block my-4 w-full py-2 
+          bg-slate-200 dark:bg-slate-800 
+          text-center font-bold
+          shadow-md cursor-pointer
+          rounded
+        `}>
+          {tossWinner}
+        </a>}
     </div>
   );
 }
