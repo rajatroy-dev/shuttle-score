@@ -16,8 +16,8 @@ export default function SinglesSetup() {
   const router = useRouter();
 
   return (
-    <div className="container mx-auto px-8">
-      <div className="flex flex-row">
+    <div className="flex flex-col justify-center items-center h-screen">
+      <div className="flex flex-row w-full">
         <div className={`
           mt-8 mb-4 p-6 
           basis-full md:basis-1/2
@@ -47,7 +47,7 @@ export default function SinglesSetup() {
         VS
         &#11835;
       </p>
-      <div className="flex flex-row">
+      <div className="flex flex-row w-full">
         <div className={`
           hidden md:block 
           basis-1/2  

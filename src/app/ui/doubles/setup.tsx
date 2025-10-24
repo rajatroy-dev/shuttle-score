@@ -24,8 +24,8 @@ export default function DoublesSetup() {
   const router = useRouter();
 
   return (
-    <div className="container mx-auto px-8">
-      <div className="flex flex-row">
+    <div className="flex flex-col justify-center items-center h-screen">
+      <div className="flex flex-row w-full">
         <div className="mt-8 mb-4 border-2 rounded p-6 basis-full md:basis-1/2">
           <div className="mb-6">
             <input
@@ -74,7 +74,7 @@ export default function DoublesSetup() {
         VS
         &#11835;
       </p>
-      <div className="flex flex-row">
+      <div className="flex flex-ro w-full">
         <div className="hidden md:block basis-1/2"></div>
         <div className="my-4 border-2 rounded p-6 basis-full md:basis-1/2">
           <div className="mb-6">

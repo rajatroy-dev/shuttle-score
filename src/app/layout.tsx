@@ -33,7 +33,11 @@ export default function RootLayout({
           bg-slate-50 text-slate-900
           dark:bg-slate-900 dark:text-slate-50
         `}>
-        <AppStoreProvider>{children}</AppStoreProvider>
+        <AppStoreProvider>
+          <div className="container mx-auto px-8">
+            {children}
+          </div>
+        </AppStoreProvider>
       </body>
     </html>
   );
