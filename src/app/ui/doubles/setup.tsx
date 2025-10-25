@@ -3,6 +3,7 @@
 import { useAppStore } from "@/app/_providers/app-provider";
 import { IAppStore } from "@/app/_stores/app-store";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function DoublesSetup() {
   const {
@@ -22,6 +23,46 @@ export default function DoublesSetup() {
   } = useAppStore((state: IAppStore) => state);
 
   const router = useRouter();
+
+  const [isTossed, setTossed] = useState(false);
+  const [tossWinner, setTossWinnner] = useState('TOSS');
+  const [startMatch, setStartMatch] = useState('START MATCH');
+
+  const coinToss = (): Promise<number> => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const result = Math.floor(Math.random() * 100) + 1;
+        resolve(result);
+      }, 5000);
+    });
+  };
+
+  const handleToss = () => {
+    setTossWinnner(teamA);
+
+    const intervalOne = setInterval(() => setTossWinnner(teamB), 100);
+    const intervalTwo = setInterval(() => setTossWinnner(teamA), 200);
+
+    coinToss().then((tossResult: number) => {
+      clearInterval(intervalOne);
+      clearInterval(intervalTwo);
+
+      if (tossResult % 2 === 0) {
+        setTeamA(teamB);
+        setTeamAPlayerA(teamBPlayerC);
+        setTeamAPlayerB(teamBPlayerD);
+        setTeamB(teamA);
+        setTeamBPlayerC(teamAPlayerA);
+        setTeamBPlayerD(teamAPlayerB);
+      }
+      setTossWinnner(tossResult % 2 !== 0 ? teamA : teamB);
+      setStartMatch(`TOSS WINNER: ${tossResult % 2 !== 0 ? teamA : teamB} !`);
+
+      setTimeout(() => setStartMatch('START MATCH'), 5000);
+
+      setTossed(true);
+    });
+  }
 
   return (
     <div className="flex flex-col justify-center items-center h-screen">
@@ -101,7 +142,7 @@ export default function DoublesSetup() {
               placeholder:text-slate-500 dark:placeholder:text-slate-400
               rounded px-3 py-2 w-full shadow-md
             `}
-              placeholder="Player A" />
+              placeholder="Player C" />
           </div>
           <div className="mt-6 ms-8">
             <input
@@ -114,23 +155,41 @@ export default function DoublesSetup() {
               placeholder:text-slate-500 dark:placeholder:text-slate-400
               rounded px-3 py-2 w-full shadow-md
             `}
-              placeholder="Player B" />
+              placeholder="Player D" />
           </div>
         </div>
       </div>
 
-      <a
-        onClick={(e) => {
-          e.preventDefault();
-          setServingSide('teamA');
-          router.push('/match');
-        }}
-        className={`
-          block text-center my-4 w-full rounded py-2 font-bold
-          bg-slate-200 dark:bg-slate-800 shadow-md cursor-pointer
+      {isTossed ?
+        <a
+          onClick={(e) => {
+            e.preventDefault();
+            setServingSide('teamA');
+            router.push('/match');
+          }}
+          className={`
+          block my-4 w-full py-2 
+          bg-slate-200 dark:bg-slate-800 
+          text-center font-bold
+          shadow-md cursor-pointer
+          rounded
         `}>
-        START MATCH
-      </a>
+          {startMatch}
+        </a> :
+        <a
+          onClick={(e) => {
+            e.preventDefault();
+            handleToss();
+          }}
+          className={`
+          block my-4 w-full py-2 
+          bg-slate-200 dark:bg-slate-800 
+          text-center font-bold
+          shadow-md cursor-pointer
+          rounded
+        `}>
+          {tossWinner}
+        </a>}
     </div>
   );
 }

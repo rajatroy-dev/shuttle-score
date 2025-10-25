@@ -93,7 +93,7 @@ export const createAppStore = (initState: IAppState = appInitialState) => {
         setTeamA: (value: string) => set({ teamA: value }),
         setTeamAPlayerA: (value: string) => set({ teamAPlayerA: value }),
         setTeamAPlayerB: (value: string) => set({ teamAPlayerB: value }),
-        setTeamB: (value: string) => set({ teamA: value }),
+        setTeamB: (value: string) => set({ teamB: value }),
         setTeamBPlayerC: (value: string) => set({ teamBPlayerC: value }),
         setTeamBPlayerD: (value: string) => set({ teamBPlayerD: value }),
         setWinner: (value: string) => set({ winner: value }),
