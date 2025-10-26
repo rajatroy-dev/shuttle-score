@@ -39,7 +39,7 @@ export type IAppActions = {
 export type IAppStore = IAppState & IAppActions;
 
 export const initAppStore = (): IAppState => {
-    return {
+    const defaultValues: IAppState = {
         matchType: 'singles',
         playerA: 'Player A',
         playerB: 'Player B',
@@ -59,7 +59,31 @@ export const initAppStore = (): IAppState => {
         }],
         currentRound: 0,
         servingSide: 'teamA'
+    };
+
+    const currentMatchId = localStorage.getItem('currentMatchId');
+    const history: {[key: string]: IAppState} = localStorage.getItem('history') && JSON.parse(localStorage.getItem('history')!);
+    const currentMatch = currentMatchId && history ? history[currentMatchId] : null;
+
+    if (currentMatch) {
+        defaultValues.matchType = currentMatch.matchType;
+        defaultValues.playerA = currentMatch.playerA;
+        defaultValues.playerB = currentMatch.playerB;
+        defaultValues.teamA = currentMatch.teamA;
+        defaultValues.teamAPlayerA = currentMatch.teamAPlayerA;
+        defaultValues.teamAPlayerB = currentMatch.teamAPlayerB;
+        defaultValues.teamB = currentMatch.teamB;
+        defaultValues.teamBPlayerC = currentMatch.teamBPlayerC;
+        defaultValues.teamBPlayerD = currentMatch.teamBPlayerD;
+        defaultValues.winner = currentMatch.winner;
+        defaultValues.noOfRounds = currentMatch.noOfRounds;
+        defaultValues.score = currentMatch.score;
+        defaultValues.currentRound = currentMatch.currentRound;
+        defaultValues.servingSide = currentMatch.servingSide;
+
     }
+
+    return defaultValues;
 }
 
 export const appInitialState: IAppState = {
