@@ -17,7 +17,7 @@ export default function Home() {
         onClick={(e) => {
           e.preventDefault();
           setMatchType('singles');
-          router.push('/setup');
+          router.push('/setup?type=singles');
         }}
         className={`
             block my-4 py-2 w-full h-64
@@ -41,7 +41,7 @@ export default function Home() {
         onClick={(e) => {
           e.preventDefault();
           setMatchType('doubles');
-          router.push('/setup');
+          router.push('/setup?type=doubles');
         }}
         className={`
             block my-4 py-2 w-full h-64
