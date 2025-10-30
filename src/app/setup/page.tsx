@@ -29,7 +29,7 @@ export default function Setup() {
   return (
     <>
       {matchType === 'doubles' || type === 'doubles'
-        ? <DoublesSetup />
+        ? <DoublesSetup state={state} />
         : <SinglesSetup state={state} />}
     </>
   );

@@ -1,11 +1,11 @@
 'use client'
 
 import { useAppStore } from "@/app/_providers/app-provider";
-import { IAppStore } from "@/app/_stores/app-store";
+import { IAppState, IAppStore } from "@/app/_stores/app-store";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 
-export default function DoublesSetup() {
+export default function DoublesSetup(props: PropsWithChildren<ILocalState>) {
   const {
     teamA,
     teamAPlayerA,
@@ -21,6 +21,17 @@ export default function DoublesSetup() {
     setTeamBPlayerD,
     setServingSide
   } = useAppStore((state: IAppStore) => state);
+
+  useEffect(() => {
+    if (props.state) {
+      setTeamA(props.state.teamA);
+      setTeamAPlayerA(props.state.teamAPlayerA);
+      setTeamAPlayerB(props.state.teamAPlayerB);
+      setTeamB(props.state.teamB);
+      setTeamBPlayerC(props.state.teamBPlayerC);
+      setTeamBPlayerD(props.state.teamBPlayerD);
+    }
+  }, []);
 
   const router = useRouter();
 
@@ -193,3 +204,7 @@ export default function DoublesSetup() {
     </div>
   );
 }
+
+type ILocalState = {
+  state?: IAppState;
+};
