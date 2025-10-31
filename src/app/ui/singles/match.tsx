@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useAppStore } from "@/app/_providers/app-provider";
-import { IAppStore, IPlayer, IScore } from "@/app/_stores/app-store";
+import { IAppState, IAppStore, IPlayer, IScore } from "@/app/_stores/app-store";
 
-export default function SinglesMatch() {
+export default function SinglesMatch(props: PropsWithChildren<ILocalState>) {
   const {
     playerA,
     playerB,
@@ -20,6 +20,15 @@ export default function SinglesMatch() {
     winner,
     setWinner
   } = useAppStore((state: IAppStore) => state);
+
+  useEffect(() => {
+    if (props.state) {
+      setCurrentRound(props.state.currentRound);
+      setServingSide(props.state.servingSide);
+      setScore(props.state.score);
+      setWinner(props.state.winner);
+    }
+  }, []);
 
   const playerNames = {
     'playerA': playerA,
@@ -188,4 +197,8 @@ type ISinglesHistory = {
 
 type IPlayerPosition = {
   [player in 0 | 1]: { [key: number]: string; };
+};
+
+type ILocalState = {
+  state?: IAppState;
 };
